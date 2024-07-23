@@ -1,20 +1,21 @@
-package sjs.instagram.domain.story;
+package sjs.instagram.db.story;
+
 
 import jakarta.persistence.*;
 import lombok.Getter;
 
 @Entity
-@Table(name = "STORY_LIKES")
+@Table(name = "STORIES")
 @Getter
-public class StoryLike {
+public class StoryEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "STORY_LIKE_ID")
-    private Long id;
-
     @Column(name = "STORY_ID")
-    private Long storyId;
+    private Long id;
 
     @Column(name = "USER_ID")
     private Long userId;
+
+    @Embedded
+    private StoryImageEntity image;
 }

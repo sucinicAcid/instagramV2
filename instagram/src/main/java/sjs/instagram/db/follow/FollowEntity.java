@@ -1,14 +1,12 @@
-package sjs.instagram.domain.follow;
+package sjs.instagram.db.follow;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "FOLLOWS")
 @Getter
-public class Follow {
+public class FollowEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "FOLLOW_ID")

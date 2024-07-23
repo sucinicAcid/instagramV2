@@ -1,4 +1,4 @@
-package sjs.instagram.domain.user;
+package sjs.instagram.db.user;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -6,7 +6,7 @@ import lombok.Getter;
 @Entity
 @Table(name = "USERS")
 @Getter
-public class User {
+public class UserEntity {
     public enum UserRole { ROLE_USER, ROLE_ADMIN }
 
     @Id

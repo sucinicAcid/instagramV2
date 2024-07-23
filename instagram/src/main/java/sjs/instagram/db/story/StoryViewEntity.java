@@ -1,4 +1,4 @@
-package sjs.instagram.domain.story;
+package sjs.instagram.db.story;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -6,7 +6,7 @@ import lombok.Getter;
 @Entity
 @Table(name = "STORY_VIEWS")
 @Getter
-public class StoryView {
+public class StoryViewEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "STORY_VIEW_ID")

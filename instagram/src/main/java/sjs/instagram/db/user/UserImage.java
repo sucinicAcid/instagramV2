@@ -1,4 +1,4 @@
-package sjs.instagram.domain.story;
+package sjs.instagram.db.user;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Embeddable
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class StoryImage {
+public class UserImage {
     @Column(name = "UPLOAD_FILE_NAME")
     private String uploadFileName;
 

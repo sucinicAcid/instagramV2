@@ -1,4 +1,4 @@
-package sjs.instagram.domain.comment;
+package sjs.instagram.db.comment;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -6,7 +6,7 @@ import lombok.Getter;
 @Entity
 @Table(name = "COMMENTS")
 @Getter
-public class Comment {
+public class CommentEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "COMMENT_ID")

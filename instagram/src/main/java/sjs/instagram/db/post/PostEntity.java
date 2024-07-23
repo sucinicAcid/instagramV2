@@ -1,14 +1,16 @@
-package sjs.instagram.domain.post;
+package sjs.instagram.db.post;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Getter;
-
+import lombok.NoArgsConstructor;
 import java.util.List;
 
 @Entity
 @Table(name = "POSTS")
 @Getter
-public class Post {
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class PostEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "POST_ID")
@@ -26,4 +28,11 @@ public class Post {
 
     @Column(name = "CONTENT")
     private String content;
+
+    public PostEntity(Long userId, List<PostImage> images, String title, String content) {
+        this.userId = userId;
+        this.images = images;
+        this.title = title;
+        this.content = content;
+    }
 }
