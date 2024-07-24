@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import sjs.instagram.domain.post.CreatePost;
 import sjs.instagram.domain.post.PostProcessor;
 import sjs.instagram.domain.post.PostValidator;
+import sjs.instagram.domain.post.UpdatePost;
 import sjs.instagram.domain.user.UserValidator;
 
 @Service
@@ -27,5 +28,12 @@ public class PostService {
         postValidator.validateExist(postId);
         postValidator.isOwnedByUser(postId, userId);
         postProcessor.remove(postId);
+    }
+
+    public void updatePost(Long userId, UpdatePost updatePost) {
+        postValidator.validate(updatePost);
+        userValidator.validateExist(userId);
+        postValidator.isOwnedByUser(updatePost.postId(), userId);
+        postProcessor.update(updatePost);
     }
 }

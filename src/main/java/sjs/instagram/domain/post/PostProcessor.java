@@ -29,4 +29,9 @@ public class PostProcessor {
     public void remove(Long postId) {
         postRepository.deleteById(postId);
     }
+
+    public void update(UpdatePost updatePost) {
+        PostEntity post = postRepository.findById(updatePost.postId()).get();
+        post.update(updatePost.title(), updatePost.content());
+    }
 }
