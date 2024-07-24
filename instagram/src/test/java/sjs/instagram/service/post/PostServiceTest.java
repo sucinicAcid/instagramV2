@@ -8,6 +8,7 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.transaction.annotation.Transactional;
 import sjs.instagram.db.post.PostEntity;
+import sjs.instagram.db.post.PostImage;
 import sjs.instagram.db.user.UserEntity;
 import sjs.instagram.domain.post.CreatePost;
 import sjs.instagram.domain.post.PostRepository;
@@ -15,6 +16,7 @@ import sjs.instagram.domain.user.UserRepository;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -28,6 +30,17 @@ class PostServiceTest {
     private UserRepository userRepository;
     @Autowired
     private PostRepository postRepository;
+
+    private PostEntity createPost() {
+        UserEntity user = userRepository.save(new UserEntity());
+        PostEntity post =  new PostEntity(
+                user.getId(),
+                Arrays.asList(new PostImage("uploadFileName1", "storeFileName1")),
+                "title1",
+                "content1"
+        );
+        return postRepository.save(post);
+    }
 
     @Test
     @DisplayName("게시물 생성")
@@ -150,5 +163,56 @@ class PostServiceTest {
         assertThatThrownBy(() -> postService.post(1L, createPost))
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessage("존재하지 않는 사용자입니다.");
+    }
+
+    @Test
+    @DisplayName("게시물 삭제")
+    void remove() {
+        //given
+        PostEntity post = createPost();
+
+        //when
+        postService.removePost(post.getUserId(), post.getId());
+
+        //then
+        List<PostEntity> findAll = postRepository.findAll();
+        assertThat(findAll.size()).isEqualTo(0);
+    }
+
+    @Test
+    @DisplayName("게시물 삭제 오류: 존재하지 않는 게시물")
+    void failRemovePostByNonExistPost() {
+        //given
+        UserEntity user = userRepository.save(new UserEntity());
+
+        //when then
+        assertThatThrownBy(() -> postService.removePost(user.getId(), 1L))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage("존재하지 않는 게시물입니다.");
+    }
+
+    @Test
+    @DisplayName("게시물 삭제 오류: 존재하지 않는 사용자")
+    void failRemovePostByNonExistUser() {
+        //given
+        PostEntity post = createPost();
+
+        //when then
+        assertThatThrownBy(() -> postService.removePost(post.getId(), post.getUserId()+1))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage("존재하지 않는 사용자입니다.");
+    }
+
+    @Test
+    @DisplayName("게시물 삭제 오류: 게시물이 사용자의 것이 아님")
+    void failRemovePostByPostIsNotOwnedByUser() {
+        //given
+        PostEntity post = createPost();
+        UserEntity newUser = userRepository.save(new UserEntity());
+
+        //when then
+        assertThatThrownBy(() -> postService.removePost(newUser.getId(), post.getId()))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage("본인 게시물만 삭제할 수 있습니다.");
     }
 }

@@ -8,10 +8,12 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.transaction.annotation.Transactional;
 import sjs.instagram.db.post.PostEntity;
+import sjs.instagram.db.post.PostImage;
 import sjs.instagram.db.user.UserEntity;
 import sjs.instagram.domain.user.UserRepository;
 
 import java.util.Arrays;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -53,4 +55,23 @@ class PostProcessorTest {
         assertThat(find.getImages().size()).isEqualTo(1);
         assertThat(find.getImages().get(0).getUploadFileName()).isEqualTo("file.png");
     }
+
+    @Test
+    @DisplayName("게시물 삭제")
+    void remove() {
+        //given
+        PostEntity post = new PostEntity(1L,
+                Arrays.asList(new PostImage("uploadFileName1", "storeFileName1")),
+                "title1",
+                "content1");
+        PostEntity saved = postRepository.save(post);
+
+        //when
+        postProcessor.remove(saved.getId());
+
+        //then
+        List<PostEntity> findAll = postRepository.findAll();
+        assertThat(findAll.size()).isEqualTo(0);
+    }
+
 }

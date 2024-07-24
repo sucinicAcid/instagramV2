@@ -7,8 +7,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import sjs.instagram.db.post.PostEntity;
 import sjs.instagram.db.post.PostImage;
+import sjs.instagram.db.user.UserEntity;
+import sjs.instagram.domain.user.UserRepository;
 
 import java.util.Arrays;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -18,19 +21,29 @@ class PostRepositoryTest {
 
     @Autowired
     private PostRepository postRepository;
+    @Autowired
+    private UserRepository userRepository;
 
     private PostEntity createPost() {
-        return new PostEntity(1L,
+        UserEntity user = userRepository.save(new UserEntity());
+        PostEntity post =  new PostEntity(
+                user.getId(),
                 Arrays.asList(new PostImage("uploadFileName1", "storeFileName1")),
                 "title1",
-                "content1");
+                "content1"
+        );
+        return postRepository.save(post);
     }
 
     @Test
     @DisplayName("게시물 생성")
     void create() {
         //given
-        PostEntity post = createPost();
+        UserEntity user = userRepository.save(new UserEntity());
+        PostEntity post =  new PostEntity(user.getId(),
+                Arrays.asList(new PostImage("uploadFileName1", "storeFileName1")),
+                "title1",
+                "content1");
 
         //when
         PostEntity saved = postRepository.save(post);
@@ -47,14 +60,27 @@ class PostRepositoryTest {
     void read() {
         //given
         PostEntity post = createPost();
-        PostEntity saved = postRepository.save(post);
 
         //when
-        PostEntity find = postRepository.findById(saved.getId()).get();
+        PostEntity find = postRepository.findById(post.getId()).get();
 
         //then
-        assertThat(saved)
+        assertThat(post)
                 .usingRecursiveComparison()
                 .isEqualTo(find);
+    }
+
+    @Test
+    @DisplayName("게시물 삭제")
+    void delete() {
+        //given
+        PostEntity post = createPost();
+
+        //when
+        postRepository.deleteById(post.getId());
+
+        //then
+        List<PostEntity> findAll = postRepository.findAll();
+        assertThat(findAll.size()).isEqualTo(0);
     }
 }
