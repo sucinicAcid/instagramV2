@@ -16,14 +16,14 @@ class UserRepositoryTest {
     private UserRepository userRepository;
 
     private UserEntity createUser() {
-        return new UserEntity();
+        return userRepository.save(new UserEntity());
     }
 
     @Test
     @DisplayName("사용자 생성")
     void create() {
         //given
-        UserEntity user = createUser();
+        UserEntity user = new UserEntity();
 
         //when
         UserEntity saved = userRepository.save(user);
@@ -40,12 +40,11 @@ class UserRepositoryTest {
     void read() {
         //given
         UserEntity user = createUser();
-        UserEntity saved = userRepository.save(user);
 
         //when
-        UserEntity find = userRepository.findById(saved.getId()).get();
+        UserEntity find = userRepository.findById(user.getId()).get();
 
         //then
-        assertThat(saved).usingRecursiveComparison().isEqualTo(find);
+        assertThat(user).usingRecursiveComparison().isEqualTo(find);
     }
 }
