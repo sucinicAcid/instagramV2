@@ -25,4 +25,8 @@ public class PostProcessor {
         );
         return saved.getId();
     }
+
+    public void remove(Long postId) {
+        postRepository.deleteById(postId);
+    }
 }

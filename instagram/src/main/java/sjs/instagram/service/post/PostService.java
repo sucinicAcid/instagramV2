@@ -21,4 +21,11 @@ public class PostService {
         userValidator.validateExist(userId);
         return postProcessor.post(userId, createPost);
     }
+
+    public void removePost(Long userId, Long postId) {
+        userValidator.validateExist(userId);
+        postValidator.validateExist(postId);
+        postValidator.isOwnedByUser(postId, userId);
+        postProcessor.remove(postId);
+    }
 }
