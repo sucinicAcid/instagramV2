@@ -12,6 +12,7 @@ import sjs.instagram.db.post.PostImage;
 import sjs.instagram.db.user.UserEntity;
 import sjs.instagram.domain.post.CreatePost;
 import sjs.instagram.domain.post.PostRepository;
+import sjs.instagram.domain.post.UpdatePost;
 import sjs.instagram.domain.user.UserRepository;
 
 import java.util.ArrayList;
@@ -212,6 +213,100 @@ class PostServiceTest {
 
         //when then
         assertThatThrownBy(() -> postService.removePost(newUser.getId(), post.getId()))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage("본인 게시물만 삭제할 수 있습니다.");
+    }
+
+    @Test
+    @DisplayName("게시물 수정")
+    void update() {
+        //given
+        PostEntity post = createPost();
+        String newTitle = "new " + post.getTitle();
+        String newContent = "new " + post.getContent();
+        UpdatePost updatePost = new UpdatePost(post.getId(), newTitle, newContent);
+
+        //when
+        postService.updatePost(post.getUserId(), updatePost);
+
+        //then
+        PostEntity find = postRepository.findById(post.getId()).get();
+        assertThat(find.getId()).isEqualTo(updatePost.postId());
+        assertThat(find.getTitle()).isEqualTo(updatePost.title());
+        assertThat(find.getContent()).isEqualTo(updatePost.content());
+        assertThat(find.getImages()).isEqualTo(post.getImages());
+    }
+
+    @Test
+    @DisplayName("게시물 수정 오류: 제목 빈칸")
+    void failUpdatePostByBlankTitle() {
+        //given
+        PostEntity post = createPost();
+        String newTitle = "";
+        String newContent = "new " + post.getContent();
+        UpdatePost updatePost = new UpdatePost(post.getId(), newTitle, newContent);
+
+        //when then
+        assertThatThrownBy(() -> postService.updatePost(post.getUserId(), updatePost))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage("제목에 빈칸이 들어갈 수 없습니다.");
+    }
+
+    @Test
+    @DisplayName("게시물 수정 오류: 내용 빈칸")
+    void failUpdatePostByBlankContent() {
+        //given
+        PostEntity post = createPost();
+        String newTitle = "new " + post.getTitle();
+        String newContent = "";
+        UpdatePost updatePost = new UpdatePost(post.getId(), newTitle, newContent);
+
+        //when then
+        assertThatThrownBy(() -> postService.updatePost(post.getUserId(), updatePost))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage("내용에 빈칸이 들어갈 수 없습니다.");
+    }
+
+    @Test
+    @DisplayName("게시물 수정 오류: 존재하지 않는 게시물")
+    void failUpdatePostByNonExistPost() {
+        //given
+        PostEntity post = createPost();
+        UpdatePost updatePost = new UpdatePost(post.getId() + 1, post.getTitle(), post.getContent());
+
+        //when then
+        assertThatThrownBy(() -> postService.updatePost(post.getUserId(), updatePost))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage("존재하지 않는 게시물입니다.");
+    }
+
+    @Test
+    @DisplayName("게시물 수정 오류: 존재하지 않는 사용자")
+    void failUpdatePostByNonExistUser() {
+        //given
+        PostEntity post = createPost();
+        String newTitle = "new " + post.getTitle();
+        String newContent = "new " + post.getContent();
+        UpdatePost updatePost = new UpdatePost(post.getId(), newTitle, newContent);
+
+        //when then
+        assertThatThrownBy(() -> postService.updatePost(post.getUserId() + 1, updatePost))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage("존재하지 않는 사용자입니다.");
+    }
+
+    @Test
+    @DisplayName("게시물 수정 오류: 게시물이 사용자의 것이 아님")
+    void failUpdatePostByPostIsNotOwnedByUser() {
+        //given
+        UserEntity user = userRepository.save(new UserEntity());
+        PostEntity post = createPost();
+        String newTitle = "new " + post.getTitle();
+        String newContent = "new " + post.getContent();
+        UpdatePost updatePost = new UpdatePost(post.getId(), newTitle, newContent);
+
+        //when then
+        assertThatThrownBy(() -> postService.updatePost(user.getId(), updatePost))
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessage("본인 게시물만 삭제할 수 있습니다.");
     }

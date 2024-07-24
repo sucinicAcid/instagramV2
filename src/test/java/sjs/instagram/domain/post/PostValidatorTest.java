@@ -38,8 +38,8 @@ class PostValidatorTest {
     }
 
     @Test
-    @DisplayName("게시물 검증 성공")
-    void validate() {
+    @DisplayName("게시물 생성 폼 검증")
+    void validateCreatePost() {
         //given
         MockMultipartFile multipartFile = new MockMultipartFile("file", "file".getBytes());
         CreatePost createPost = new CreatePost(
@@ -53,8 +53,8 @@ class PostValidatorTest {
     }
 
     @Test
-    @DisplayName("게시물 검증 오류: 제목 빈칸")
-    void failValidateByBlankTitle() {
+    @DisplayName("게시물 생성 폼 검증 오류: 제목 빈칸")
+    void failValidateCreatePostByBlankTitle() {
         //given
         MockMultipartFile multipartFile = new MockMultipartFile("file", "file".getBytes());
         CreatePost createPost = new CreatePost(
@@ -70,8 +70,8 @@ class PostValidatorTest {
     }
 
     @Test
-    @DisplayName("게시물 검증 오류: 내용 빈칸")
-    void failValidateByBlankContent() {
+    @DisplayName("게시물 생성 폼 검증 오류: 내용 빈칸")
+    void failValidateCreatePostByBlankContent() {
         //given
         MockMultipartFile multipartFile = new MockMultipartFile("file", "file".getBytes());
         CreatePost createPost = new CreatePost(
@@ -87,8 +87,8 @@ class PostValidatorTest {
     }
 
     @Test
-    @DisplayName("게시물 검증 오류: 사진 개수 0개")
-    void failValidateByZeroImage() {
+    @DisplayName("게시물 생성 폼 검증 오류: 사진 개수 0개")
+    void failValidateCreatePostByZeroImage() {
         //given
         CreatePost createPost = new CreatePost(
                 "title",
@@ -103,8 +103,8 @@ class PostValidatorTest {
     }
 
     @Test
-    @DisplayName("게시물 검증 오류: 사진 용량 0B")
-    void failValidateByEmptyImage() {
+    @DisplayName("게시물 생성 폼 검증 오류: 사진 용량 0B")
+    void failValidateCreatePostByEmptyImage() {
         //given
         MockMultipartFile multipartFile = new MockMultipartFile("file", "".getBytes());
         CreatePost createPost = new CreatePost(
@@ -161,5 +161,63 @@ class PostValidatorTest {
                 )
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessage("본인 게시물만 삭제할 수 있습니다.");
+    }
+
+    @Test
+    @DisplayName("게시물 수정 폼 검증")
+    void validateUpdatePost() {
+        //given
+        PostEntity post = createPost();
+        String newTitle = "new " + post.getTitle();
+        String newContent = "new " + post.getContent();
+        UpdatePost updatePost = new UpdatePost(post.getId(), newTitle, newContent);
+
+        //when then
+        assertThatCode(() -> postValidator.validate(updatePost)).doesNotThrowAnyException();
+    }
+
+    @Test
+    @DisplayName("게시물 수정 폼 검증 오류: 제목 빈칸")
+    void failValidateUpdatePostByBlankTitle() {
+        //given
+        PostEntity post = createPost();
+        String newTitle = "";
+        String newContent = "new " + post.getContent();
+        UpdatePost updatePost = new UpdatePost(post.getId(), newTitle, newContent);
+
+        //when then
+        assertThatThrownBy(() -> postValidator.validate(updatePost))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage("제목에 빈칸이 들어갈 수 없습니다.");
+    }
+
+    @Test
+    @DisplayName("게시물 수정 폼 검증 오류: 내용 빈칸")
+    void failValidateUpdatePostByBlankContent() {
+        //given
+        PostEntity post = createPost();
+        String newTitle = "new " + post.getTitle();
+        String newContent = "";
+        UpdatePost updatePost = new UpdatePost(post.getId(), newTitle, newContent);
+
+        //when then
+        assertThatThrownBy(() -> postValidator.validate(updatePost))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage("내용에 빈칸이 들어갈 수 없습니다.");
+    }
+
+    @Test
+    @DisplayName("게시물 수정 폼 검증 오류: 존재하지 않는 게시물")
+    void failValidateUpdatePostByNonExistPost() {
+        //given
+        PostEntity post = createPost();
+        String newTitle = "new " + post.getTitle();
+        String newContent = "new " + post.getContent();
+        UpdatePost updatePost = new UpdatePost(post.getId() + 1, newTitle, newContent);
+
+        //when then
+        assertThatThrownBy(() -> postValidator.validate(updatePost))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage("존재하지 않는 게시물입니다.");
     }
 }

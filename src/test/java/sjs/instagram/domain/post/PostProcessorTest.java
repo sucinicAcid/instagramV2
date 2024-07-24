@@ -29,6 +29,17 @@ class PostProcessorTest {
     @Autowired
     private PostRepository postRepository;
 
+    private PostEntity createPost() {
+        UserEntity user = userRepository.save(new UserEntity());
+        PostEntity post =  new PostEntity(
+                user.getId(),
+                Arrays.asList(new PostImage("uploadFileName", "storeFileName")),
+                "title",
+                "content"
+        );
+        return postRepository.save(post);
+    }
+
     @Test
     @DisplayName("게시물 생성")
     void create() {
@@ -60,18 +71,33 @@ class PostProcessorTest {
     @DisplayName("게시물 삭제")
     void remove() {
         //given
-        PostEntity post = new PostEntity(1L,
-                Arrays.asList(new PostImage("uploadFileName1", "storeFileName1")),
-                "title1",
-                "content1");
-        PostEntity saved = postRepository.save(post);
+        PostEntity post = createPost();
 
         //when
-        postProcessor.remove(saved.getId());
+        postProcessor.remove(post.getId());
 
         //then
         List<PostEntity> findAll = postRepository.findAll();
         assertThat(findAll.size()).isEqualTo(0);
     }
 
+    @Test
+    @DisplayName("게시물 수정")
+    void update() {
+        //given
+        PostEntity post = createPost();
+        String newTitle = "new " + post.getTitle();
+        String newContent = "new " + post.getContent();
+        UpdatePost updatePost = new UpdatePost(post.getId(), newTitle, newContent);
+
+        //when
+        postProcessor.update(updatePost);
+
+        //then
+        PostEntity find = postRepository.findById(post.getId()).get();
+        assertThat(find.getId()).isEqualTo(updatePost.postId());
+        assertThat(find.getTitle()).isEqualTo(updatePost.title());
+        assertThat(find.getContent()).isEqualTo(updatePost.content());
+        assertThat(find.getImages()).isEqualTo(post.getImages());
+    }
 }
