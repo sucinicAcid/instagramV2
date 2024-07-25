@@ -7,11 +7,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.transaction.annotation.Transactional;
+import sjs.instagram.db.follow.FollowEntity;
 import sjs.instagram.db.post.PostEntity;
 import sjs.instagram.db.post.PostImageEntity;
 import sjs.instagram.db.user.UserEntity;
+import sjs.instagram.domain.follow.FollowRepository;
 import sjs.instagram.domain.post.CreatePost;
 import sjs.instagram.domain.post.PostRepository;
+import sjs.instagram.domain.post.ThumbnailPost;
 import sjs.instagram.domain.post.UpdatePost;
 import sjs.instagram.domain.user.UserRepository;
 
@@ -31,6 +34,8 @@ class PostServiceTest {
     private UserRepository userRepository;
     @Autowired
     private PostRepository postRepository;
+    @Autowired
+    private FollowRepository followRepository;
 
     private PostEntity createPost() {
         UserEntity user = userRepository.save(new UserEntity());
@@ -41,6 +46,30 @@ class PostServiceTest {
                 "content1"
         );
         return postRepository.save(post);
+    }
+
+    private List<ThumbnailPost> createThumbnailPosts(Long userId) {
+        List<ThumbnailPost> posts = new ArrayList<>();
+        for (int i=0; i<5; i++) {
+            PostImageEntity first = new PostImageEntity(
+                    "first uploadFileName" + i,
+                    "first storeFileName" + i
+            );
+            PostImageEntity second = new PostImageEntity(
+                    "second uploadFileName" + i,
+                    "second storeFileName" + i
+            );
+            PostEntity post = new PostEntity(
+                    userId,
+                    Arrays.asList(first, second),
+                    "title"+i,
+                    "content"+i
+            );
+            postRepository.save(post);
+            ThumbnailPost thumbnailPost = new ThumbnailPost(post.getId(), "first storeFileName" + i);
+            posts.add(thumbnailPost);
+        }
+        return posts;
     }
 
     @Test
@@ -309,5 +338,74 @@ class PostServiceTest {
         assertThatThrownBy(() -> postService.updatePost(user.getId(), updatePost))
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessage("본인 게시물만 삭제할 수 있습니다.");
+    }
+
+    @Test
+    @DisplayName("썸네일 게시물 모두 조회: 팔로우 관계일 때")
+    void readThumbnailPostWhenFollowing() {
+        //given
+        UserEntity user = userRepository.save(new UserEntity());
+        UserEntity target = userRepository.save(new UserEntity());
+        target.changePrivacyTo(UserEntity.UserAccountPrivacy.PRIVATE);
+        FollowEntity follow = new FollowEntity(user.getId(), target.getId());
+        followRepository.save(follow);
+        List<ThumbnailPost> posts = createThumbnailPosts(target.getId());
+
+        //when
+        List<ThumbnailPost> result = postService.readThumbnailPost(user.getId(), target.getId());
+
+        //then
+        assertThat(posts).isEqualTo(result);
+    }
+
+    @Test
+    @DisplayName("썸네일 게시물 모두 조회: 상대 계정이 PUBLIC일 때")
+    void readThumbnailPostWhenTargetAccountIsPUBLIC() {
+        //given
+        UserEntity user = userRepository.save(new UserEntity());
+        UserEntity target = userRepository.save(new UserEntity());
+        target.changePrivacyTo(UserEntity.UserAccountPrivacy.PUBLIC);
+        List<ThumbnailPost> posts = createThumbnailPosts(target.getId());
+
+        //when
+        List<ThumbnailPost> result = postService.readThumbnailPost(user.getId(), target.getId());
+
+        //then
+        assertThat(posts).isEqualTo(result);
+    }
+
+    @Test
+    @DisplayName("썸네일 게시물 모두 조회 오류: 존재하지 않는 사용자")
+    void failReadThumbnailPostByNonExistUser() {
+        //given
+        UserEntity user1 = userRepository.save(new UserEntity());
+        UserEntity user2 = userRepository.save(new UserEntity());
+        Long user1Id = user1.getId();
+        Long user2Id = user2.getId();
+
+        //when then
+        assertThatThrownBy(() -> postService.readThumbnailPost(user1Id, user1Id+user2Id))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage("존재하지 않는 사용자입니다.");
+        assertThatThrownBy(() -> postService.readThumbnailPost(user1Id+user2Id, user2Id))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage("존재하지 않는 사용자입니다.");
+        assertThatThrownBy(() -> postService.readThumbnailPost(2*user1Id+user2Id, user1Id+user2Id))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage("존재하지 않는 사용자입니다.");
+    }
+
+    @Test
+    @DisplayName("썸네일 게시물 모두 조회 오류: 게시물 접근 권한 없음(팔로잉 하지 않으면서 상대 계정이 PRIVATE)")
+    void failReadThumbnailPostInvalidAccess() {
+        //given
+        UserEntity user = userRepository.save(new UserEntity());
+        UserEntity target = userRepository.save(new UserEntity());
+        target.changePrivacyTo(UserEntity.UserAccountPrivacy.PRIVATE);
+
+        //when then
+        assertThatThrownBy(() -> postService.readThumbnailPost(user.getId(), target.getId()))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage("게시물 접근 권한이 없습니다.");
     }
 }

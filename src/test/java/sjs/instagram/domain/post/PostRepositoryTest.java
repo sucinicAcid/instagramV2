@@ -10,6 +10,7 @@ import sjs.instagram.db.post.PostImageEntity;
 import sjs.instagram.db.user.UserEntity;
 import sjs.instagram.domain.user.UserRepository;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -102,5 +103,38 @@ class PostRepositoryTest {
         //then
         List<PostEntity> findAll = postRepository.findAll();
         assertThat(findAll.size()).isEqualTo(0);
+    }
+
+    @Test
+    @DisplayName("썸네일 게시물 모두 조회")
+    void findThumbnailPost() {
+        //given
+        List<ThumbnailPost> posts = new ArrayList<>();
+        UserEntity user = userRepository.save(new UserEntity());
+        for (int i=0; i<5; i++) {
+            PostImageEntity first = new PostImageEntity(
+                    "first uploadFileName" + i,
+                    "first storeFileName" + i
+            );
+            PostImageEntity second = new PostImageEntity(
+                    "second uploadFileName" + i,
+                    "second storeFileName" + i
+            );
+            PostEntity post = new PostEntity(
+                    user.getId(),
+                    Arrays.asList(first, second),
+                    "title"+i,
+                    "content"+i
+            );
+            postRepository.save(post);
+            ThumbnailPost thumbnailPost = new ThumbnailPost(post.getId(), "first storeFileName" + i);
+            posts.add(thumbnailPost);
+        }
+
+        //when
+        List<ThumbnailPost> result = postRepository.findThumbnailPost(user.getId());
+
+        //then
+        assertThat(posts).isEqualTo(result);
     }
 }
