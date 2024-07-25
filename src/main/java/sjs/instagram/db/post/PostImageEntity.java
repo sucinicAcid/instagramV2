@@ -10,7 +10,7 @@ import sjs.instagram.db.BaseEntity;
 @Table(name = "POST_IMAGES")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class PostImageEntity {
+public class PostImageEntity extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     Long id;

@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import sjs.instagram.db.BaseEntity;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,7 +13,7 @@ import java.util.List;
 @Table(name = "POSTS")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class PostEntity {
+public class PostEntity extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "POST_ID")
