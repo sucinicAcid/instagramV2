@@ -1,18 +1,20 @@
 package sjs.instagram.db.story;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Embeddable;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import sjs.instagram.db.post.PostImage;
 
-@Embeddable
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Entity
+@Table(name = "STORY_IMAGES")
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class StoryImageEntity {
-    @Column(name = "UPLOAD_FILE_NAME")
-    private String uploadFileName;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    Long id;
 
-    @Column(name = "STORE_FILE_NAME")
-    private String storeFileName;
+    @Embedded
+    StoryImage image;
 }
