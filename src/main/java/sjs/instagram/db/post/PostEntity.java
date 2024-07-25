@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -19,9 +20,9 @@ public class PostEntity {
     @Column(name = "USER_ID")
     private Long userId;
 
-    @ElementCollection
-    @CollectionTable(name = "POST_IMAGES", joinColumns = @JoinColumn(name = "POST_ID"))
-    private List<PostImage> images;
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "POST_ID")
+    private List<PostImageEntity> images = new ArrayList<>();
 
     @Column(name = "TITLE")
     private String title;
@@ -29,7 +30,7 @@ public class PostEntity {
     @Column(name = "CONTENT")
     private String content;
 
-    public PostEntity(Long userId, List<PostImage> images, String title, String content) {
+    public PostEntity(Long userId, List<PostImageEntity> images, String title, String content) {
         this.userId = userId;
         this.images = images;
         this.title = title;

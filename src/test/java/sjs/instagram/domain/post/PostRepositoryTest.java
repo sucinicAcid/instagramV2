@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import sjs.instagram.db.post.PostEntity;
-import sjs.instagram.db.post.PostImage;
+import sjs.instagram.db.post.PostImageEntity;
 import sjs.instagram.db.user.UserEntity;
 import sjs.instagram.domain.user.UserRepository;
 
@@ -28,7 +28,7 @@ class PostRepositoryTest {
         UserEntity user = userRepository.save(new UserEntity());
         PostEntity post =  new PostEntity(
                 user.getId(),
-                Arrays.asList(new PostImage("uploadFileName1", "storeFileName1")),
+                Arrays.asList(new PostImageEntity("uploadFileName1", "storeFileName1")),
                 "title1",
                 "content1"
         );
@@ -41,7 +41,7 @@ class PostRepositoryTest {
         //given
         UserEntity user = userRepository.save(new UserEntity());
         PostEntity post =  new PostEntity(user.getId(),
-                Arrays.asList(new PostImage("uploadFileName1", "storeFileName1")),
+                Arrays.asList(new PostImageEntity("uploadFileName1", "storeFileName1")),
                 "title1",
                 "content1");
 

@@ -8,7 +8,7 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.transaction.annotation.Transactional;
 import sjs.instagram.db.post.PostEntity;
-import sjs.instagram.db.post.PostImage;
+import sjs.instagram.db.post.PostImageEntity;
 import sjs.instagram.db.user.UserEntity;
 import sjs.instagram.domain.user.UserRepository;
 
@@ -33,7 +33,7 @@ class PostProcessorTest {
         UserEntity user = userRepository.save(new UserEntity());
         PostEntity post =  new PostEntity(
                 user.getId(),
-                Arrays.asList(new PostImage("uploadFileName", "storeFileName")),
+                Arrays.asList(new PostImageEntity("uploadFileName", "storeFileName")),
                 "title",
                 "content"
         );
@@ -64,7 +64,7 @@ class PostProcessorTest {
         assertThat(find.getTitle()).isEqualTo(createPost.title());
         assertThat(find.getContent()).isEqualTo(createPost.content());
         assertThat(find.getImages().size()).isEqualTo(1);
-        assertThat(find.getImages().get(0).getUploadFileName()).isEqualTo("file.png");
+        assertThat(find.getImages().get(0).getImage().getUploadFileName()).isEqualTo("file.png");
     }
 
     @Test

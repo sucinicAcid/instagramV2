@@ -3,7 +3,7 @@ package sjs.instagram.domain.post;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import sjs.instagram.db.post.PostEntity;
-import sjs.instagram.db.post.PostImage;
+import sjs.instagram.db.post.PostImageEntity;
 
 import java.util.List;
 
@@ -14,7 +14,7 @@ public class PostProcessor {
     private final PostImageFileStore postImageFileStore;
 
     public Long post(Long userId, CreatePost createPost) {
-        List<PostImage> images = postImageFileStore.store(createPost.uploadFiles());
+        List<PostImageEntity> images = postImageFileStore.store(createPost.uploadFiles());
         PostEntity saved = postRepository.save(
                 new PostEntity(
                         userId,
