@@ -8,6 +8,7 @@ import lombok.Getter;
 @Getter
 public class UserEntity {
     public enum UserRole { ROLE_USER, ROLE_ADMIN }
+    public enum UserAccountPrivacy {PUBLIC, PRIVATE}
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -32,4 +33,12 @@ public class UserEntity {
     @Enumerated(EnumType.STRING)
     @Column(name = "ROLE")
     private UserRole role;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "PRIVACY")
+    private UserAccountPrivacy privacy = UserAccountPrivacy.PUBLIC;
+
+    public void changePrivacyTo(UserAccountPrivacy privacy) {
+        this.privacy = privacy;
+    }
 }

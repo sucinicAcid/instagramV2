@@ -1,11 +1,14 @@
 package sjs.instagram.db.follow;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "FOLLOWS")
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class FollowEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -17,4 +20,9 @@ public class FollowEntity {
 
     @Column(name = "TO_USER_ID")
     private Long toUserId;
+
+    public FollowEntity(Long fromUserId, Long toUserId) {
+        this.fromUserId = fromUserId;
+        this.toUserId = toUserId;
+    }
 }

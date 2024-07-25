@@ -3,11 +3,10 @@ package sjs.instagram.service.post;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import sjs.instagram.domain.post.CreatePost;
-import sjs.instagram.domain.post.PostProcessor;
-import sjs.instagram.domain.post.PostValidator;
-import sjs.instagram.domain.post.UpdatePost;
+import sjs.instagram.domain.post.*;
 import sjs.instagram.domain.user.UserValidator;
+
+import java.util.List;
 
 @Service
 @Transactional
@@ -16,6 +15,7 @@ public class PostService {
     private final PostProcessor postProcessor;
     private final PostValidator postValidator;
     private final UserValidator userValidator;
+    private final PostReader postReader;
 
     public Long post(Long userId, CreatePost createPost) {
         postValidator.validate(createPost);
@@ -35,5 +35,12 @@ public class PostService {
         userValidator.validateExist(userId);
         postValidator.isOwnedByUser(updatePost.postId(), userId);
         postProcessor.update(updatePost);
+    }
+
+    public List<ThumbnailPost> readThumbnailPost(Long userId, Long targetUserId) {
+        userValidator.validateExist(userId);
+        userValidator.validateExist(targetUserId);
+        userValidator.canViewPost(userId, targetUserId);
+        return postReader.readThumbnailPost(targetUserId);
     }
 }
