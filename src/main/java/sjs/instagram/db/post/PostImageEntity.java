@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import sjs.instagram.db.BaseEntity;
+import sjs.instagram.db.base.BaseEntity;
 
 @Entity
 @Table(name = "POST_IMAGES")

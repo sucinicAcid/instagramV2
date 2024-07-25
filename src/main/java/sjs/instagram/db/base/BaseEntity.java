@@ -1,4 +1,4 @@
-package sjs.instagram.db;
+package sjs.instagram.db.base;
 
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
