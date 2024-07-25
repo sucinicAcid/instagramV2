@@ -71,6 +71,26 @@ class PostRepositoryTest {
     }
 
     @Test
+    @DisplayName("게시물 수정")
+    void update() {
+        //given
+        PostEntity post = createPost();
+        String newTitle = "new " + post.getTitle();
+        String newContent = "new " + post.getContent();
+
+        //when
+        post.update(newTitle, newContent);
+
+        //then
+        PostEntity find = postRepository.findById(post.getId()).get();
+        assertThat(find.getId()).isEqualTo(post.getId());
+        assertThat(find.getUserId()).isEqualTo(post.getUserId());
+        assertThat(find.getTitle()).isEqualTo(newTitle);
+        assertThat(find.getContent()).isEqualTo(newContent);
+        assertThat(find.getImages()).isEqualTo(post.getImages());
+    }
+
+    @Test
     @DisplayName("게시물 삭제")
     void delete() {
         //given
