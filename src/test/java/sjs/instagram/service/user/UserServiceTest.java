@@ -8,6 +8,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import sjs.instagram.db.user.UserEntity;
 import sjs.instagram.domain.user.JoinUser;
+import sjs.instagram.domain.user.UserInfo;
 import sjs.instagram.domain.user.UserRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -128,5 +129,31 @@ class UserServiceTest {
                 userService.removeUser(saved.getId(), saved.getId()+1))
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessage("본인 이외의 계정은 탈퇴가 불가능합니다.");
+    }
+
+    @Test
+    @DisplayName("사용자 정보 조회")
+    void readUserInfo() {
+        //given
+        UserEntity user = new UserEntity("id123456", "pw123456");
+        userRepository.save(user);
+
+        //when
+        UserInfo info = userService.readUserInfo(user.getId());
+
+        //then
+        assertThat(info.instagramId()).isEqualTo(user.getInstagramId());
+        assertThat(info.name()).isEqualTo(user.getName());
+        assertThat(info.introduction()).isEqualTo(user.getIntroduction());
+        assertThat(info.privacy()).isEqualTo(user.getPrivacy());
+    }
+
+    @Test
+    @DisplayName("사용자 정보 조회 실패: 존재하지 않는 사용자")
+    void failReadUserInfo() {
+        assertThatThrownBy(() ->
+                userService.readUserInfo(1L)).
+                isInstanceOf(IllegalStateException.class).
+                hasMessage("존재하지 않는 사용자입니다.");
     }
 }

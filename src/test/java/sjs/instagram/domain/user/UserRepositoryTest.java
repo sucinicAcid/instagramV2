@@ -56,4 +56,20 @@ class UserRepositoryTest {
         //then
         assertThat(userRepository.findAll()).isEmpty();
     }
+
+    @Test
+    @DisplayName("사용자 정보 조회")
+    void findUserInfo() {
+        //given
+        UserEntity user = userRepository.save(new UserEntity("id", "pw"));
+
+        //when
+        UserInfo info = userRepository.findUserInfo(user.getId());
+
+        //then
+        assertThat(info.instagramId()).isEqualTo(user.getInstagramId());
+        assertThat(info.name()).isEqualTo(user.getName());
+        assertThat(info.introduction()).isEqualTo(user.getIntroduction());
+        assertThat(info.privacy()).isEqualTo(user.getPrivacy());
+    }
 }
