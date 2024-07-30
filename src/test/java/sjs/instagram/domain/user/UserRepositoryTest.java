@@ -45,7 +45,7 @@ class UserRepositoryTest {
     }
 
     @Test
-    @DisplayName("사용자 조회")
+    @DisplayName("사용자 삭제")
     void delete() {
         //given
         UserEntity user = userRepository.save(new UserEntity("id", "pw"));
