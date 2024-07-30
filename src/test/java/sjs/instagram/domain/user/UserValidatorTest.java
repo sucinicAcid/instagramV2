@@ -81,4 +81,100 @@ class UserValidatorTest {
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessage("게시물 접근 권한이 없습니다.");
     }
+
+    @Test
+    @DisplayName("아이디 길이 검증")
+    void validateIdLength() {
+        //given
+        JoinUser user = new JoinUser("id123456", "pw123456");
+
+        //when then
+        assertThatNoException().isThrownBy(() -> userValidator.validate(user));
+    }
+
+    @Test
+    @DisplayName("아이디 길이 검증 실패: 아이디가 6자 미만이거나 15자 초과")
+    void failValidateIdLength() {
+        //given
+        JoinUser user1 = new JoinUser("id", "pw123456");
+        JoinUser user2 = new JoinUser("id123456789101112131415", "pw1234567");
+
+        //when then
+        assertThatThrownBy(() -> userValidator.validate(user1))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage("아이디는 6자 이상 15자 이하여야 합니다.");
+        assertThatThrownBy(() -> userValidator.validate(user2))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage("아이디는 6자 이상 15자 이하여야 합니다.");
+    }
+
+    @Test
+    @DisplayName("아이디 유효문자 검증")
+    void validateIdCharacter() {
+        //given
+        JoinUser user = new JoinUser("idID1234", "pw123456");
+
+        //when then
+        assertThatNoException().isThrownBy(() -> userValidator.validate(user));
+    }
+
+    @Test
+    @DisplayName("아이디 유효문자 검증 실패: 아이디는 영문 소문자,대문자,숫자만 사용 가능")
+    void failValidateIdCharacter() {
+        //given
+        JoinUser user = new JoinUser("id!@#$%^*", "pw123456");
+
+        //when then
+        assertThatThrownBy(() -> userValidator.validate(user))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage("아이디는 영문 소문자,대문자,숫자만 사용 가능합니다.");
+    }
+
+    @Test
+    @DisplayName("비밀번호 길이 검증")
+    void validatePasswordLength() {
+        //given
+        JoinUser user = new JoinUser("id123456", "pw123456");
+
+        //when then
+        assertThatNoException().isThrownBy(() -> userValidator.validate(user));
+    }
+
+    @Test
+    @DisplayName("비밀번호 길이 검증 실패: 비밀번호가 6자 미만이거나 15자 초과")
+    void failValidatePasswordLength() {
+        //given
+        JoinUser user1 = new JoinUser("id123456", "pw");
+        JoinUser user2 = new JoinUser("id123456", "pw123456789101112131415");
+
+        //when then
+        assertThatThrownBy(() -> userValidator.validate(user1))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage("비밀번호는 6자 이상 15자 이하여야 합니다.");
+        assertThatThrownBy(() -> userValidator.validate(user2))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage("비밀번호는 6자 이상 15자 이하여야 합니다.");
+    }
+
+    @Test
+    @DisplayName("비밀번호 유효문자 검증")
+    void validatePasswordCharacter() {
+        //given
+        JoinUser user = new JoinUser("id123456", "pwPW1!?*");
+
+        //when then
+        assertThatNoException().isThrownBy(() -> userValidator.validate(user));
+    }
+
+    @Test
+    @DisplayName("비밀번호 유효문자 검증 실패: 비밀번호는 영문 소문자,대문자,숫자,?,!,*만 사용 가능")
+    void failValidatePasswordCharacter() {
+        //given
+        JoinUser user = new JoinUser("id123456", "pw12@#$%");
+
+        //when then
+        assertThatThrownBy(() -> userValidator.validate(user))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage("비밀번호는 영문 소문자,대문자,숫자,?,!,*만 사용 가능합니다.");
+    }
 }
