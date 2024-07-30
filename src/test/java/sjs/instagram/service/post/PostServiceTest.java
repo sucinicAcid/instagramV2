@@ -245,7 +245,7 @@ class PostServiceTest {
         PostEntity post = createPost();
 
         //when then
-        assertThatThrownBy(() -> postService.removePost(post.getId(), post.getUserId()+1))
+        assertThatThrownBy(() -> postService.removePost( post.getUserId()+1, post.getId()))
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessage("존재하지 않는 사용자입니다.");
     }
