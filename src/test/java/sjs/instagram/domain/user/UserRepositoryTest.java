@@ -43,4 +43,17 @@ class UserRepositoryTest {
         //then
         assertThat(user).usingRecursiveComparison().isEqualTo(find);
     }
+
+    @Test
+    @DisplayName("사용자 조회")
+    void delete() {
+        //given
+        UserEntity user = userRepository.save(new UserEntity("id", "pw"));
+
+        //when
+        userRepository.deleteById(user.getId());
+
+        //then
+        assertThat(userRepository.findAll()).isEmpty();
+    }
 }
