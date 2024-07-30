@@ -19,4 +19,8 @@ public class UserProcessor {
         UserEntity saved = userRepository.save(user);
         return saved.getId();
     }
+
+    public void remove(Long userId) {
+        userRepository.deleteById(userId);
+    }
 }

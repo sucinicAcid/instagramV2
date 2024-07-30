@@ -35,4 +35,9 @@ public class UserValidator {
         if (!pw.matches("[a-zA-Z0-9?!*]+"))
             throw new IllegalStateException("비밀번호는 영문 소문자,대문자,숫자,?,!,*만 사용 가능합니다.");
     }
+
+    public void isSameUser(Long userId, Long targetUserId) {
+        if (userId != targetUserId)
+            throw new IllegalStateException("본인 이외의 계정은 탈퇴가 불가능합니다.");
+    }
 }

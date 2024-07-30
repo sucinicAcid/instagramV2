@@ -18,4 +18,9 @@ public class UserService {
         userValidator.validate(joinUser);
         return userProcessor.append(joinUser);
     }
+
+    public void removeUser(Long userId, Long targetUserId) {
+        userValidator.isSameUser(userId, targetUserId);
+        userProcessor.remove(targetUserId);
+    }
 }
