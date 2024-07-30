@@ -7,7 +7,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Embeddable
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class UserImage {
     @Column(name = "UPLOAD_FILE_NAME")
@@ -15,4 +14,8 @@ public class UserImage {
 
     @Column(name = "STORE_FILE_NAME")
     private String storeFileName;
+
+    public UserImage() {
+        this.uploadFileName = this.storeFileName = "defaultUserImage.jpg";
+    }
 }

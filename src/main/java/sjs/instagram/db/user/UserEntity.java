@@ -1,11 +1,14 @@
 package sjs.instagram.db.user;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "USERS")
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class UserEntity {
     public enum UserRole { ROLE_USER, ROLE_ADMIN }
     public enum UserAccountPrivacy {PUBLIC, PRIVATE}
@@ -36,7 +39,17 @@ public class UserEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "PRIVACY")
-    private UserAccountPrivacy privacy = UserAccountPrivacy.PUBLIC;
+    private UserAccountPrivacy privacy;
+
+    public UserEntity(String instagramId, String password) {
+        this.instagramId = instagramId;
+        this.password = password;
+        this.name = " ";
+        this.introduction = " ";
+        this.role = UserRole.ROLE_USER;
+        this.privacy = UserAccountPrivacy.PUBLIC;
+        this.image = new UserImage();
+    }
 
     public void changePrivacyTo(UserAccountPrivacy privacy) {
         this.privacy = privacy;
