@@ -1,5 +1,6 @@
 package sjs.instagram.service.post;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,9 +37,10 @@ class PostServiceTest {
     private PostRepository postRepository;
     @Autowired
     private FollowRepository followRepository;
+    private String userInstagramId = "id" + 0;
 
     private PostEntity createPost() {
-        UserEntity user = userRepository.save(new UserEntity());
+        UserEntity user = createUser();
         PostEntity post =  new PostEntity(
                 user.getId(),
                 Arrays.asList(new PostImageEntity("uploadFileName1", "storeFileName1")),
@@ -72,11 +74,26 @@ class PostServiceTest {
         return posts;
     }
 
+    private UserEntity createUser() {
+        return userRepository.save(new UserEntity(nextUserInstagramId(), "pw"));
+    }
+
+    private String nextUserInstagramId() {
+        String numStr = userInstagramId.substring(2, userInstagramId.length());
+        int numInt = Integer.parseInt(numStr);
+        return "id" + (numInt+1);
+    }
+
+    @BeforeEach
+    void setUserInstagramIdToid0() {
+        userInstagramId = "id" + 0;
+    }
+
     @Test
     @DisplayName("게시물 생성")
     void create() {
         //given
-        UserEntity user = userRepository.save(new UserEntity());
+        UserEntity user = createUser();
         MockMultipartFile multipartFile = new MockMultipartFile(
                 "file", "file.png", MediaType.IMAGE_PNG_VALUE, "file".getBytes()
         );
@@ -103,7 +120,7 @@ class PostServiceTest {
     @DisplayName("게시물 생성 오류: 제목 빈칸")
     void failCreatePostByBlankTitle() {
         //given
-        UserEntity user = userRepository.save(new UserEntity());
+        UserEntity user = createUser();
         MockMultipartFile multipartFile = new MockMultipartFile(
                 "file", "file.png", MediaType.IMAGE_PNG_VALUE, "file".getBytes()
         );
@@ -123,7 +140,7 @@ class PostServiceTest {
     @DisplayName("게시물 생성 오류: 내용 빈칸")
     void failCreatePostByBlankContent() {
         //given
-        UserEntity user = userRepository.save(new UserEntity());
+        UserEntity user = createUser();
         MockMultipartFile multipartFile = new MockMultipartFile(
                 "file", "file.png", MediaType.IMAGE_PNG_VALUE, "file".getBytes()
         );
@@ -143,7 +160,7 @@ class PostServiceTest {
     @DisplayName("게시물 생성 오류: 사진 개수 0개")
     void failValidateByZeroImage() {
         //given
-        UserEntity user = userRepository.save(new UserEntity());
+        UserEntity user = createUser();
         CreatePost createPost = new CreatePost(
                 "title",
                 "content",
@@ -160,7 +177,7 @@ class PostServiceTest {
     @DisplayName("게시물 생성 오류: 사진 용량 0B")
     void failValidateByEmptyImage() {
         //given
-        UserEntity user = userRepository.save(new UserEntity());
+        UserEntity user = createUser();
         MockMultipartFile multipartFile = new MockMultipartFile(
                 "file", "file.png", MediaType.IMAGE_PNG_VALUE, "".getBytes()
         );
@@ -213,7 +230,7 @@ class PostServiceTest {
     @DisplayName("게시물 삭제 오류: 존재하지 않는 게시물")
     void failRemovePostByNonExistPost() {
         //given
-        UserEntity user = userRepository.save(new UserEntity());
+        UserEntity user = createUser();
 
         //when then
         assertThatThrownBy(() -> postService.removePost(user.getId(), 1L))
@@ -238,7 +255,7 @@ class PostServiceTest {
     void failRemovePostByPostIsNotOwnedByUser() {
         //given
         PostEntity post = createPost();
-        UserEntity newUser = userRepository.save(new UserEntity());
+        UserEntity newUser = createUser();
 
         //when then
         assertThatThrownBy(() -> postService.removePost(newUser.getId(), post.getId()))
@@ -328,7 +345,7 @@ class PostServiceTest {
     @DisplayName("게시물 수정 오류: 게시물이 사용자의 것이 아님")
     void failUpdatePostByPostIsNotOwnedByUser() {
         //given
-        UserEntity user = userRepository.save(new UserEntity());
+        UserEntity user = createUser();
         PostEntity post = createPost();
         String newTitle = "new " + post.getTitle();
         String newContent = "new " + post.getContent();
@@ -344,8 +361,8 @@ class PostServiceTest {
     @DisplayName("썸네일 게시물 모두 조회: 팔로우 관계일 때")
     void readThumbnailPostWhenFollowing() {
         //given
-        UserEntity user = userRepository.save(new UserEntity());
-        UserEntity target = userRepository.save(new UserEntity());
+        UserEntity user = createUser();
+        UserEntity target = createUser();
         target.changePrivacyTo(UserEntity.UserAccountPrivacy.PRIVATE);
         FollowEntity follow = new FollowEntity(user.getId(), target.getId());
         followRepository.save(follow);
@@ -362,8 +379,8 @@ class PostServiceTest {
     @DisplayName("썸네일 게시물 모두 조회: 상대 계정이 PUBLIC일 때")
     void readThumbnailPostWhenTargetAccountIsPUBLIC() {
         //given
-        UserEntity user = userRepository.save(new UserEntity());
-        UserEntity target = userRepository.save(new UserEntity());
+        UserEntity user = createUser();
+        UserEntity target = createUser();
         target.changePrivacyTo(UserEntity.UserAccountPrivacy.PUBLIC);
         List<ThumbnailPost> posts = createThumbnailPosts(target.getId());
 
@@ -378,8 +395,8 @@ class PostServiceTest {
     @DisplayName("썸네일 게시물 모두 조회 오류: 존재하지 않는 사용자")
     void failReadThumbnailPostByNonExistUser() {
         //given
-        UserEntity user1 = userRepository.save(new UserEntity());
-        UserEntity user2 = userRepository.save(new UserEntity());
+        UserEntity user1 = createUser();
+        UserEntity user2 = createUser();
         Long user1Id = user1.getId();
         Long user2Id = user2.getId();
 
@@ -399,8 +416,8 @@ class PostServiceTest {
     @DisplayName("썸네일 게시물 모두 조회 오류: 게시물 접근 권한 없음(팔로잉 하지 않으면서 상대 계정이 PRIVATE)")
     void failReadThumbnailPostInvalidAccess() {
         //given
-        UserEntity user = userRepository.save(new UserEntity());
-        UserEntity target = userRepository.save(new UserEntity());
+        UserEntity user = createUser();
+        UserEntity target = createUser();
         target.changePrivacyTo(UserEntity.UserAccountPrivacy.PRIVATE);
 
         //when then

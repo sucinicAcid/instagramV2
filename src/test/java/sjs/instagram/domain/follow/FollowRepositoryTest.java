@@ -20,8 +20,8 @@ class FollowRepositoryTest {
     private UserRepository userRepository;
 
     private FollowEntity createFollow() {
-        UserEntity user = userRepository.save(new UserEntity());
-        UserEntity target = userRepository.save(new UserEntity());
+        UserEntity user = userRepository.save(new UserEntity("id1", "pw1"));
+        UserEntity target = userRepository.save(new UserEntity("id2", "pw2"));
         FollowEntity follow = new FollowEntity(user.getId(), target.getId());
         return followRepository.save(follow);
     }
@@ -30,8 +30,8 @@ class FollowRepositoryTest {
     @DisplayName("팔로우 생성")
     void create() {
         //given
-        UserEntity user = userRepository.save(new UserEntity());
-        UserEntity target = userRepository.save(new UserEntity());
+        UserEntity user = userRepository.save(new UserEntity("id1", "pw1"));
+        UserEntity target = userRepository.save(new UserEntity("id2", "pw2"));
         FollowEntity follow = new FollowEntity(user.getId(), target.getId());
 
         //when

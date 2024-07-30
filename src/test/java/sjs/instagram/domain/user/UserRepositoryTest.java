@@ -15,15 +15,11 @@ class UserRepositoryTest {
     @Autowired
     private UserRepository userRepository;
 
-    private UserEntity createUser() {
-        return userRepository.save(new UserEntity());
-    }
-
     @Test
     @DisplayName("사용자 생성")
     void create() {
         //given
-        UserEntity user = new UserEntity();
+        UserEntity user = new UserEntity("id", "pw");
 
         //when
         UserEntity saved = userRepository.save(user);
@@ -39,7 +35,7 @@ class UserRepositoryTest {
     @DisplayName("사용자 조회")
     void read() {
         //given
-        UserEntity user = createUser();
+        UserEntity user = userRepository.save(new UserEntity("id", "pw"));
 
         //when
         UserEntity find = userRepository.findById(user.getId()).get();

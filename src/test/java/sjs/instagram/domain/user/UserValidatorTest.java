@@ -25,7 +25,7 @@ class UserValidatorTest {
     @DisplayName("사용자 존재 검증")
     void validateExist() {
         //given
-        UserEntity user = new UserEntity();
+        UserEntity user = new UserEntity("id1", "pw1");
         UserEntity saved = userRepository.save(user);
 
         //when then
@@ -45,8 +45,8 @@ class UserValidatorTest {
     @DisplayName("게시물 보기 접근 권한 검증: 팔로우 관계일 때")
     void validateCanViewPostWhenFollowing() {
         //given
-        UserEntity user = userRepository.save(new UserEntity());
-        UserEntity target = userRepository.save(new UserEntity());
+        UserEntity user = userRepository.save(new UserEntity("id1", "pw1"));
+        UserEntity target = userRepository.save(new UserEntity("id2", "pw2"));
         FollowEntity follow = new FollowEntity(user.getId(), target.getId());
         followRepository.save(follow);
 
@@ -59,8 +59,8 @@ class UserValidatorTest {
     @DisplayName("게시물 보기 접근 권한 검증: 상대 계정이 PUBLIC일 때")
     void validateCanViewPostWhenTargetAccountIsPUBLIC() {
         //given
-        UserEntity user = userRepository.save(new UserEntity());
-        UserEntity target = userRepository.save(new UserEntity());
+        UserEntity user = userRepository.save(new UserEntity("id1", "pw1"));
+        UserEntity target = userRepository.save(new UserEntity("id2", "pw2"));
         target.changePrivacyTo(UserEntity.UserAccountPrivacy.PUBLIC);
 
         //when then
@@ -72,8 +72,8 @@ class UserValidatorTest {
     @DisplayName("게시물 보기 접근 권한 검증 오류: 팔로잉 하지 않으면서 상대 계정이 PRIVATE일 때")
     void failValidateCanViewPostByInvalidAccess() {
         //given
-        UserEntity user = userRepository.save(new UserEntity());
-        UserEntity target = userRepository.save(new UserEntity());
+        UserEntity user = userRepository.save(new UserEntity("id1", "pw1"));
+        UserEntity target = userRepository.save(new UserEntity("id2", "pw2"));
         target.changePrivacyTo(UserEntity.UserAccountPrivacy.PRIVATE);
 
         //when then

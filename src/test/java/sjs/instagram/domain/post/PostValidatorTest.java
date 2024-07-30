@@ -1,5 +1,6 @@
 package sjs.instagram.domain.post;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,9 +26,10 @@ class PostValidatorTest {
     private PostRepository postRepository;
     @Autowired
     private UserRepository userRepository;
+    private String userInstagramId = "id" + 0;
 
     private PostEntity createPost() {
-        UserEntity user = userRepository.save(new UserEntity());
+        UserEntity user = createUser();
         PostEntity post =  new PostEntity(
                 user.getId(),
                 Arrays.asList(new PostImageEntity("uploadFileName1", "storeFileName1")),
@@ -35,6 +37,21 @@ class PostValidatorTest {
                 "content1"
         );
         return postRepository.save(post);
+    }
+
+    private UserEntity createUser() {
+        return userRepository.save(new UserEntity(nextUserInstagramId(), "pw"));
+    }
+
+    private String nextUserInstagramId() {
+        String numStr = userInstagramId.substring(2, userInstagramId.length());
+        int numInt = Integer.parseInt(numStr);
+        return "id" + (numInt+1);
+    }
+
+    @BeforeEach
+    void setUserInstagramIdToid0() {
+        userInstagramId = "id" + 0;
     }
 
     @Test

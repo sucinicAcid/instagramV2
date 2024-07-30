@@ -1,5 +1,6 @@
 package sjs.instagram.domain.post;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,9 +29,10 @@ class PostProcessorTest {
     private UserRepository userRepository;
     @Autowired
     private PostRepository postRepository;
+    private String userInstagramId = "id" + 0;
 
     private PostEntity createPost() {
-        UserEntity user = userRepository.save(new UserEntity());
+        UserEntity user = createUser();
         PostEntity post =  new PostEntity(
                 user.getId(),
                 Arrays.asList(new PostImageEntity("uploadFileName", "storeFileName")),
@@ -40,11 +42,26 @@ class PostProcessorTest {
         return postRepository.save(post);
     }
 
+    private UserEntity createUser() {
+        return userRepository.save(new UserEntity(nextUserInstagramId(), "pw"));
+    }
+
+    private String nextUserInstagramId() {
+        String numStr = userInstagramId.substring(2, userInstagramId.length());
+        int numInt = Integer.parseInt(numStr);
+        return "id" + (numInt+1);
+    }
+
+    @BeforeEach
+    void setUserInstagramIdToid0() {
+        userInstagramId = "id" + 0;
+    }
+
     @Test
     @DisplayName("게시물 생성")
     void create() {
         //given
-        UserEntity user = userRepository.save(new UserEntity());
+        UserEntity user = createUser();
         MockMultipartFile multipartFile = new MockMultipartFile(
                 "file", "file.png", MediaType.IMAGE_PNG_VALUE, "file".getBytes()
         );

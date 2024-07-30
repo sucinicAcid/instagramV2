@@ -31,7 +31,7 @@ class PostReaderTest {
     void readThumbnailPost() {
         //given
         List<ThumbnailPost> posts = new ArrayList<>();
-        UserEntity user = userRepository.save(new UserEntity());
+        UserEntity user = userRepository.save(new UserEntity("id", "pw"));
         for (int i=0; i<5; i++) {
             PostImageEntity first = new PostImageEntity(
                     "first uploadFileName" + i,
