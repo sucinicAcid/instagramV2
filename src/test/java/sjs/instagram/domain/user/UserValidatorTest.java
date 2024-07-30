@@ -177,4 +177,30 @@ class UserValidatorTest {
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessage("비밀번호는 영문 소문자,대문자,숫자,?,!,*만 사용 가능합니다.");
     }
+
+    @Test
+    @DisplayName("같은 사용자인지 검증")
+    void validateSameUser() {
+        //given
+        UserEntity user = new UserEntity("id123456", "pw123456");
+        UserEntity saved = userRepository.save(user);
+
+        //when then
+        assertThatNoException().isThrownBy(() ->
+                userValidator.isSameUser(saved.getId(), saved.getId()));
+    }
+
+    @Test
+    @DisplayName("같은 사용자인지 검증 실패")
+    void failValidateSameUser() {
+        //given
+        UserEntity user = new UserEntity("id123456", "pw123456");
+        UserEntity saved = userRepository.save(user);
+
+        //when then
+        assertThatThrownBy(() ->
+                userValidator.isSameUser(saved.getId(), saved.getId()+1))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage("본인 이외의 계정은 탈퇴가 불가능합니다.");
+    }
 }

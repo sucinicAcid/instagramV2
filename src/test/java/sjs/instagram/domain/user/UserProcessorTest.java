@@ -42,4 +42,18 @@ class UserProcessorTest {
         assertThat(find.getRole()).isEqualTo(UserEntity.UserRole.ROLE_USER);
         assertThat(find.getPrivacy()).isEqualTo(UserEntity.UserAccountPrivacy.PUBLIC);
     }
+
+    @Test
+    @DisplayName("회원 탈퇴")
+    void remove() {
+        //given
+        UserEntity user = new UserEntity("id123456", "pw123456");
+        UserEntity saved = userRepository.save(user);
+
+        //when
+        userProcessor.remove(saved.getId());
+
+        //then
+        assertThat(userRepository.findAll()).isEmpty();
+    }
 }

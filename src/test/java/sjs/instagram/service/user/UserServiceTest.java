@@ -101,4 +101,32 @@ class UserServiceTest {
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessage("비밀번호는 영문 소문자,대문자,숫자,?,!,*만 사용 가능합니다.");
     }
+
+    @Test
+    @DisplayName("회원 탈퇴")
+    void removeUser() {
+        //given
+        UserEntity user = new UserEntity("id123456", "pw123456");
+        UserEntity saved = userRepository.save(user);
+
+        //when
+        userService.removeUser(saved.getId(), saved.getId());
+
+        //then
+        assertThat(userRepository.findAll()).isEmpty();
+    }
+
+    @Test
+    @DisplayName("회원 탈퇴 실패: 본인의 계정만 탈퇴할 수 있음")
+    void failRemoveUser() {
+        //given
+        UserEntity user = new UserEntity("id123456", "pw123456");
+        UserEntity saved = userRepository.save(user);
+
+        //when
+        assertThatThrownBy(() ->
+                userService.removeUser(saved.getId(), saved.getId()+1))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage("본인 이외의 계정은 탈퇴가 불가능합니다.");
+    }
 }
