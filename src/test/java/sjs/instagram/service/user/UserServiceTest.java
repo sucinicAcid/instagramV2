@@ -1,5 +1,6 @@
 package sjs.instagram.service.user;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,12 +8,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import sjs.instagram.db.user.UserEntity;
+import sjs.instagram.domain.ValidationError;
+import sjs.instagram.domain.ValidationErrorException;
 import sjs.instagram.domain.user.JoinUser;
 import sjs.instagram.domain.user.UserInfo;
 import sjs.instagram.domain.user.UserRepository;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThatList;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -55,12 +58,21 @@ class UserServiceTest {
         JoinUser user2 = new JoinUser("id123456789101112131415", "pw1234567");
 
         //when then
-        assertThatThrownBy(() -> userService.joinUser(user1))
-                .isInstanceOf(IllegalStateException.class)
-                .hasMessage("아이디는 6자 이상 15자 이하여야 합니다.");
-        assertThatThrownBy(() -> userService.joinUser(user2))
-                .isInstanceOf(IllegalStateException.class)
-                .hasMessage("아이디는 6자 이상 15자 이하여야 합니다.");
+        ValidationErrorException ex1 = Assertions.assertThrows(
+                ValidationErrorException.class,
+                () -> userService.joinUser(user1)
+        );
+        assertThatList(ex1.getErrors()).hasSize(1);
+        assertThatList(ex1.getErrors())
+                .containsOnly(new ValidationError("instagramId", "아이디는 6자 이상 15자 이하여야 합니다."));
+
+        ValidationErrorException ex2 = Assertions.assertThrows(
+                ValidationErrorException.class,
+                () -> userService.joinUser(user2)
+        );
+        assertThatList(ex2.getErrors()).hasSize(1);
+        assertThatList(ex2.getErrors())
+                .containsOnly(new ValidationError("instagramId", "아이디는 6자 이상 15자 이하여야 합니다."));
     }
 
     @Test
@@ -70,9 +82,13 @@ class UserServiceTest {
         JoinUser user = new JoinUser("id!@#$%^*", "pw123456");
 
         //when then
-        assertThatThrownBy(() -> userService.joinUser(user))
-                .isInstanceOf(IllegalStateException.class)
-                .hasMessage("아이디는 영문 소문자,대문자,숫자만 사용 가능합니다.");
+        ValidationErrorException ex = Assertions.assertThrows(
+                ValidationErrorException.class,
+                () -> userService.joinUser(user)
+        );
+        assertThatList(ex.getErrors()).hasSize(1);
+        assertThatList(ex.getErrors())
+                .containsOnly(new ValidationError("instagramId", "아이디는 영문 소문자,대문자,숫자만 사용 가능합니다."));
     }
 
     @Test
@@ -83,12 +99,21 @@ class UserServiceTest {
         JoinUser user2 = new JoinUser("id123456", "pw123456789101112131415");
 
         //when then
-        assertThatThrownBy(() -> userService.joinUser(user1))
-                .isInstanceOf(IllegalStateException.class)
-                .hasMessage("비밀번호는 6자 이상 15자 이하여야 합니다.");
-        assertThatThrownBy(() -> userService.joinUser(user2))
-                .isInstanceOf(IllegalStateException.class)
-                .hasMessage("비밀번호는 6자 이상 15자 이하여야 합니다.");
+        ValidationErrorException ex1 = Assertions.assertThrows(
+                ValidationErrorException.class,
+                () -> userService.joinUser(user1)
+        );
+        assertThatList(ex1.getErrors()).hasSize(1);
+        assertThatList(ex1.getErrors())
+                .containsOnly(new ValidationError("password", "비밀번호는 6자 이상 15자 이하여야 합니다."));
+
+        ValidationErrorException ex2 = Assertions.assertThrows(
+                ValidationErrorException.class,
+                () -> userService.joinUser(user2)
+        );
+        assertThatList(ex2.getErrors()).hasSize(1);
+        assertThatList(ex2.getErrors())
+                .containsOnly(new ValidationError("password", "비밀번호는 6자 이상 15자 이하여야 합니다."));
     }
 
     @Test
@@ -98,9 +123,13 @@ class UserServiceTest {
         JoinUser user = new JoinUser("id123456", "pw12@#$%");
 
         //when then
-        assertThatThrownBy(() -> userService.joinUser(user))
-                .isInstanceOf(IllegalStateException.class)
-                .hasMessage("비밀번호는 영문 소문자,대문자,숫자,?,!,*만 사용 가능합니다.");
+        ValidationErrorException ex = Assertions.assertThrows(
+                ValidationErrorException.class,
+                () -> userService.joinUser(user)
+        );
+        assertThatList(ex.getErrors()).hasSize(1);
+        assertThatList(ex.getErrors())
+                .containsOnly(new ValidationError("password", "비밀번호는 영문 소문자,대문자,숫자,?,!,*만 사용 가능합니다."));
     }
 
     @Test
