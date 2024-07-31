@@ -12,12 +12,22 @@ import sjs.instagram.domain.ValidationErrorException;
 import sjs.instagram.service.user.JoinUserRequest;
 import sjs.instagram.service.user.UserService;
 
-import java.util.List;
-
 @Controller
 @RequiredArgsConstructor
 public class LoginController {
     private final UserService userService;
+
+    @GetMapping("/loginForm")
+    public String loginForm() {
+        return "loginForm";
+    }
+
+    @GetMapping("/loginFail")
+    public String loginFail(Model model) {
+        model.addAttribute("isFail", true);
+        model.addAttribute("errorMessage", "아이디 또는 비밀번호가 틀렸습니다.");
+        return "loginForm";
+    }
 
     @GetMapping("/joinForm")
     public String joinForm(Model model) {

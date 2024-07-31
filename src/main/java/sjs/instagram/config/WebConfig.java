@@ -18,10 +18,12 @@ public class WebConfig {
                         .loginPage("/loginForm")
                         .loginProcessingUrl("/loginProc")
                         .defaultSuccessUrl("/")
+                        .failureUrl("/loginFail")
                 )
                 .authorizeHttpRequests(a -> a
                         .requestMatchers("/css/**").permitAll()
                         .requestMatchers("/loginForm").permitAll()
+                        .requestMatchers("/loginFail").permitAll()
                         .requestMatchers("/loginProc").permitAll()
                         .requestMatchers("/joinForm").permitAll()
                         .requestMatchers("/joinProc").permitAll()

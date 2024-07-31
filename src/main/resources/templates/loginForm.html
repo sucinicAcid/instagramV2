@@ -1,0 +1,27 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <link href="../css/loginForm.css"
+          th:href="@{/css/loginForm.css}" rel="stylesheet">
+    <title>로그인 페이지</title>
+</head>
+<body>
+
+<div class="login-container">
+    <div class="login-form">
+        <h2>Instagram</h2>
+        <form action="/loginProc" method="post">
+            <div class="field-error" th:if="${isFail}" th:text="${errorMessage}">아이디 비밀번호 오류</div>
+            <input th:class="${isFail} ? 'field-error' : ''" type="text" placeholder="Instagram Id" name="instagramId">
+            <input th:class="${isFail} ? 'field-error' : ''" type="password" placeholder="Password" name="password">
+            <button>Login</button>
+        </form>
+        <p>Forgot password? <a href="#">Reset it here</a></p>
+        <div>
+            <a href="/joinForm">회원가입</a>
+        </div>
+    </div>
+</div>
+</body>
+</html>
