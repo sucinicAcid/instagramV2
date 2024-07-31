@@ -2,6 +2,7 @@ package sjs.instagram.db.user;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -10,7 +11,11 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class UserEntity {
-    public enum UserRole { ROLE_USER, ROLE_ADMIN }
+    @AllArgsConstructor
+    public enum UserRole {
+        USER("ROLE_USER"), ADMIN("ROLE_ADMIN");
+        public final String fullName;
+    }
     public enum UserAccountPrivacy {PUBLIC, PRIVATE}
 
     @Id
@@ -46,7 +51,7 @@ public class UserEntity {
         this.password = password;
         this.name = " ";
         this.introduction = " ";
-        this.role = UserRole.ROLE_USER;
+        this.role = UserRole.USER;
         this.privacy = UserAccountPrivacy.PUBLIC;
         this.image = new UserImage();
     }

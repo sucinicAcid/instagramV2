@@ -39,7 +39,7 @@ class UserProcessorTest {
         assertThat(find.getIntroduction()).isEqualTo(" ");
         assertThat(find.getImage().getUploadFileName()).isEqualTo("defaultUserImage.jpg");
         assertThat(find.getImage().getStoreFileName()).isEqualTo("defaultUserImage.jpg");
-        assertThat(find.getRole()).isEqualTo(UserEntity.UserRole.ROLE_USER);
+        assertThat(find.getRole()).isEqualTo(UserEntity.UserRole.USER);
         assertThat(find.getPrivacy()).isEqualTo(UserEntity.UserAccountPrivacy.PUBLIC);
     }
 

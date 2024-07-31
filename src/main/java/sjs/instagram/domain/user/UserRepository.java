@@ -11,4 +11,6 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
            "where u.id = :userId"
     )
     UserInfo findUserInfo(@Param("userId") Long userId);
+
+    UserEntity findByInstagramId(String instagramId);
 }
