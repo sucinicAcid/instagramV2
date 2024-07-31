@@ -3,7 +3,12 @@ package sjs.instagram.domain.user;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import sjs.instagram.db.user.UserEntity;
+import sjs.instagram.domain.ValidationError;
+import sjs.instagram.domain.ValidationErrorException;
 import sjs.instagram.domain.follow.FollowRepository;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -24,16 +29,19 @@ public class UserValidator {
     }
 
     public void validate(JoinUser joinUser) {
+        List<ValidationError> errors = new ArrayList<>();
         String id = joinUser.instagramId();
         String pw = joinUser.password();
         if (id.length() < 6 || id.length() > 15)
-            throw new IllegalStateException("아이디는 6자 이상 15자 이하여야 합니다.");
+            errors.add(new ValidationError("instagramId","아이디는 6자 이상 15자 이하여야 합니다."));
         if (!id.matches("[a-zA-Z0-9]+"))
-            throw new IllegalStateException("아이디는 영문 소문자,대문자,숫자만 사용 가능합니다.");
+            errors.add(new ValidationError("instagramId","아이디는 영문 소문자,대문자,숫자만 사용 가능합니다."));
         if (pw.length() < 6 || pw.length() > 15)
-            throw new IllegalStateException("비밀번호는 6자 이상 15자 이하여야 합니다.");
+            errors.add(new ValidationError("password","비밀번호는 6자 이상 15자 이하여야 합니다."));
         if (!pw.matches("[a-zA-Z0-9?!*]+"))
-            throw new IllegalStateException("비밀번호는 영문 소문자,대문자,숫자,?,!,*만 사용 가능합니다.");
+            errors.add(new ValidationError("password","비밀번호는 영문 소문자,대문자,숫자,?,!,*만 사용 가능합니다."));
+        if (!errors.isEmpty())
+            throw new ValidationErrorException(errors);
     }
 
     public void isSameUser(Long userId, Long targetUserId) {
