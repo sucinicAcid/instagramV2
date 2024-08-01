@@ -1,0 +1,66 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <link href="../css/index.css"
+          th:href="@{/css/index.css}" rel="stylesheet">
+    <title>메인 페이지</title>
+</head>
+<body>
+<div class="bar">
+    <div class="logo">
+        <img src="../image/logo.png" width="123" height="50">
+    </div>
+    <div>
+        <div class="menu">
+            <div class="menu-icon">
+                <img src="../image/home.svg">
+            </div>
+            <div class="menu-name">홈</div>
+        </div>
+        <div class="menu">
+            <div class="menu-icon">
+                <img src="../image/search.svg">
+            </div>
+            <div class="menu-name">검색</div>
+        </div>
+        <div class="menu">
+            <div class="menu-icon">
+                <img src="../image/explore.svg">
+            </div>
+            <div class="menu-name">탐색 탭</div>
+        </div>
+        <div class="menu">
+            <div class="menu-icon">
+                <img src="../image/reels.svg">
+            </div>
+            <div class="menu-name">릴스</div>
+        </div>
+        <div class="menu">
+            <div class="menu-icon">
+                <img src="../image/message.svg">
+            </div>
+            <div class="menu-name">메시지</div>
+        </div>
+        <div class="menu">
+            <div class="menu-icon">
+                <img src="../image/notification.svg">
+            </div>
+            <div class="menu-name">알림</div>
+        </div>
+        <div class="menu">
+            <div class="menu-icon">
+                <img src="../image/create.svg">
+            </div>
+            <div class="menu-name">만들기</div>
+        </div>
+        <div class="menu">
+            <!--            <div class="menu-icon bar-profile-box"><img th:src="${userInfo.photo}" class="bar-profile-image"></div>-->
+            <div class="menu-name">프로필</div>
+        </div>
+    </div>
+    <div class="last"></div>
+</div>
+
+</body>
+</html>

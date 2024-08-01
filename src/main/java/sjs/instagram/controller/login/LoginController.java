@@ -17,6 +17,11 @@ import sjs.instagram.service.user.UserService;
 public class LoginController {
     private final UserService userService;
 
+    @GetMapping(value = {"", "/"})
+    public String index() {
+        return "index";
+    }
+
     @GetMapping("/loginForm")
     public String loginForm() {
         return "loginForm";
