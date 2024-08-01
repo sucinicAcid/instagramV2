@@ -41,7 +41,7 @@ public class LoginController {
     }
 
     @PostMapping("/joinProc")
-    public String joinProc(@ModelAttribute JoinUserRequest joinUserRequest, BindingResult bindingResult, RedirectAttributes r) {
+    public String joinProc(@ModelAttribute JoinUserRequest joinUserRequest, BindingResult bindingResult) {
         try {
             userService.joinUser(joinUserRequest.toJoinUser());
             return "redirect:/loginForm";
