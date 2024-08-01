@@ -1,13 +1,11 @@
 package sjs.instagram.controller.login;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 import sjs.instagram.domain.user.JoinUser;
@@ -28,23 +26,6 @@ class LoginControllerTest {
     private MockMvc mockMvc;
     @Autowired
     private UserService userService;
-    @Autowired
-    private ObjectMapper objectMapper;
-
-    @Test
-    @DisplayName("별도 인증 없이 접근 가능")
-    void publicUrl() throws Exception {
-        mockMvc.perform(get("/css/index.css")).andExpect(status().isOk());
-        mockMvc.perform(get("/loginForm"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("loginForm"));
-        mockMvc.perform(get("/loginFail"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("loginForm"));
-        mockMvc.perform(get("/joinForm"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("joinForm"));
-    }
 
     @Test
     @DisplayName("인증 없이 접근 불가한 곳은 /loginForm 으로 리다이렉션")
@@ -61,6 +42,20 @@ class LoginControllerTest {
         mockMvc.perform(get("/posts/1"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrlPattern("**/loginForm"));
+    }
+
+    @Test
+    @DisplayName("css 파일은 별도 인증 없이 접근 가능")
+    void css() throws Exception {
+        mockMvc.perform(get("/css/index.css")).andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("/loginForm은 별도 인증 없이 접근 가능")
+    void loginForm() throws Exception {
+        mockMvc.perform(get("/loginForm"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("loginForm"));
     }
 
     @Test
@@ -106,6 +101,25 @@ class LoginControllerTest {
                         .password("password","pw12345678910"))
                 .andExpect(unauthenticated())
                 .andExpect(redirectedUrl("/loginFail"));
+    }
+
+    @Test
+    @DisplayName("로그인 오류시 오류메시지와 함께 로그인 페이지로 이동")
+    void loginFail() throws Exception {
+        mockMvc.perform(get("/loginFail"))
+                .andExpect(unauthenticated())
+                .andExpect(model().attribute("isFail", true))
+                .andExpect(model().attribute("errorMessage", "아이디 또는 비밀번호가 틀렸습니다."))
+                .andExpect(status().isOk())
+                .andExpect(view().name("loginForm"));
+    }
+
+    @Test
+    @DisplayName("/joinForm은 별도 인증 없이 접근 가능")
+    void publicUrl() throws Exception {
+        mockMvc.perform(get("/joinForm"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("joinForm"));
     }
 
     @Test
