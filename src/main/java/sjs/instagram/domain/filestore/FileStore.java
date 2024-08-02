@@ -38,4 +38,8 @@ public class FileStore {
         int pos = uploadFileName.lastIndexOf(".");
         return uploadFileName.substring(pos + 1);
     }
+
+    public String getFullPath(String storeFileName) {
+        return fileDir + storeFileName;
+    }
 }

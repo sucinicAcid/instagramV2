@@ -1,0 +1,108 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <link href="../css/publicUserInfo.css" rel="stylesheet">
+    <title>프로필 정보 페이지</title>
+</head>
+<body>
+
+
+<!-- ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ -->
+<!-- ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ -->
+<div class="bar">
+    <div class="logo">
+        <img src="../image/logo.png" width="123" height="50">
+    </div>
+    <div>
+        <div class="menu">
+            <div class="menu-icon">
+                <img src="../image/home.svg">
+            </div>
+            <div class="menu-name">홈</div>
+        </div>
+        <div class="menu">
+            <div class="menu-icon">
+                <img src="../image/search.svg">
+            </div>
+            <div class="menu-name">검색</div>
+        </div>
+        <div class="menu">
+            <div class="menu-icon">
+                <img src="../image/explore.svg">
+            </div>
+            <div class="menu-name">탐색 탭</div>
+        </div>
+        <div class="menu">
+            <div class="menu-icon">
+                <img src="../image/reels.svg">
+            </div>
+            <div class="menu-name">릴스</div>
+        </div>
+        <div class="menu">
+            <div class="menu-icon">
+                <img src="../image/message.svg">
+            </div>
+            <div class="menu-name">메시지</div>
+        </div>
+        <div class="menu">
+            <div class="menu-icon">
+                <img src="../image/notification.svg">
+            </div>
+            <div class="menu-name">알림</div>
+        </div>
+        <div class="menu">
+            <div class="menu-icon">
+                <img src="../image/create.svg">
+            </div>
+            <div class="menu-name">만들기</div>
+        </div>
+        <div class="menu">
+            <div class="menu-icon bar-profile-box"><img th:src="@{/fileStore/{imageName}(imageName=${userInfo.imageStoreFileName})}" class="bar-profile-image"></div>
+            <div class="menu-name">프로필</div>
+        </div>
+    </div>
+    <div class="last"></div>
+</div>
+<div class="main">
+    <div class="profile">
+        <div class="profile-image-section">
+            <div class="box">
+                <img class="profile-image" th:src="@{/fileStore/{imageName}(imageName=${userInfo.imageStoreFileName})}">
+            </div>
+        </div>
+        <div class="profile-text-section">
+            <div class="id-section">
+                <div class="j"><a class="font-size-25px" th:text="${userInfo.instagramId}">instagramId</a></div>
+                <!--                <div class="follow-button-box">-->
+                <!--                    <button class="follow-button" type="submit">팔로우</button>-->
+                <!--                </div>-->
+            </div>
+            <div class="profile-blank"></div>
+            <ul class="numbers">
+                <li class="number">게시물 <span class="fw-600" th:text="${#lists.size(posts)}">게시물 수</span></li>
+                <li class="number">팔로워 <span class="fw-600" th:text="${userInfo.followerCount}">팔로우 수</span></li>
+                <li class="number">팔로우 <span class="fw-600" th:text="${userInfo.followingCount}">팔로잉 수</span></li>
+            </ul>
+            <div>
+                <div class="name" th:text="${userInfo.name}">이름</div>
+                <div class="introduction" th:text="${userInfo.introduction}">소개글</div>
+            </div>
+        </div>
+    </div>
+    <div class="blank"></div>
+
+    <div class="posts">
+        <div th:each="rowNumber, row : ${#numbers.sequence(0, posts.size / 3)}">
+            <div class="post-3">
+                <div th:each="colNumber, col : ${#numbers.sequence(rowNumber * 3, (rowNumber + 1) * 3 - 1)}" class="post">
+                    <th:block th:if="${colNumber &lt; posts.size()}">
+                        <img th:src="|/uploadFile/${posts[colNumber].storeFileName}|" class="post-image">
+                    </th:block>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
