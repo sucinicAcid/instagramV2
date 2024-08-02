@@ -11,4 +11,8 @@ public class UserReader {
     public UserInfo read(Long userId) {
         return userRepository.findUserInfo(userId);
     }
+
+    public Long readByInstagramId(String instagramId) {
+        return userRepository.findByInstagramId(instagramId).getId();
+    }
 }

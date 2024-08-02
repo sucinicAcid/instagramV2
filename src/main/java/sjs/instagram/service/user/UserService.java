@@ -27,4 +27,8 @@ public class UserService {
         userValidator.validateExist(userId);
         return userReader.read(userId);
     }
+
+    public Long read(String instagramId) {
+        return userReader.readByInstagramId(instagramId);
+    }
 }
