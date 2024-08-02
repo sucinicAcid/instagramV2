@@ -12,6 +12,7 @@ import sjs.instagram.db.follow.FollowEntity;
 import sjs.instagram.db.post.PostEntity;
 import sjs.instagram.db.post.PostImageEntity;
 import sjs.instagram.db.user.UserEntity;
+import sjs.instagram.domain.exception.NoUserFoundException;
 import sjs.instagram.domain.follow.FollowRepository;
 import sjs.instagram.domain.post.CreatePost;
 import sjs.instagram.domain.post.PostRepository;
@@ -208,7 +209,7 @@ class PostServiceTest {
 
         //when then
         assertThatThrownBy(() -> postService.post(1L, createPost))
-                .isInstanceOf(IllegalStateException.class)
+                .isInstanceOf(NoUserFoundException.class)
                 .hasMessage("존재하지 않는 사용자입니다.");
     }
 
@@ -246,7 +247,7 @@ class PostServiceTest {
 
         //when then
         assertThatThrownBy(() -> postService.removePost( post.getUserId()+1, post.getId()))
-                .isInstanceOf(IllegalStateException.class)
+                .isInstanceOf(NoUserFoundException.class)
                 .hasMessage("존재하지 않는 사용자입니다.");
     }
 
@@ -337,7 +338,7 @@ class PostServiceTest {
 
         //when then
         assertThatThrownBy(() -> postService.updatePost(post.getUserId() + 1, updatePost))
-                .isInstanceOf(IllegalStateException.class)
+                .isInstanceOf(NoUserFoundException.class)
                 .hasMessage("존재하지 않는 사용자입니다.");
     }
 
@@ -402,13 +403,13 @@ class PostServiceTest {
 
         //when then
         assertThatThrownBy(() -> postService.readThumbnailPost(user1Id, user1Id+user2Id))
-                .isInstanceOf(IllegalStateException.class)
+                .isInstanceOf(NoUserFoundException.class)
                 .hasMessage("존재하지 않는 사용자입니다.");
         assertThatThrownBy(() -> postService.readThumbnailPost(user1Id+user2Id, user2Id))
-                .isInstanceOf(IllegalStateException.class)
+                .isInstanceOf(NoUserFoundException.class)
                 .hasMessage("존재하지 않는 사용자입니다.");
         assertThatThrownBy(() -> postService.readThumbnailPost(2*user1Id+user2Id, user1Id+user2Id))
-                .isInstanceOf(IllegalStateException.class)
+                .isInstanceOf(NoUserFoundException.class)
                 .hasMessage("존재하지 않는 사용자입니다.");
     }
 

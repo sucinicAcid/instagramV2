@@ -3,8 +3,9 @@ package sjs.instagram.domain.user;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import sjs.instagram.db.user.UserEntity;
-import sjs.instagram.domain.ValidationError;
-import sjs.instagram.domain.ValidationErrorException;
+import sjs.instagram.domain.exception.NoUserFoundException;
+import sjs.instagram.domain.exception.ValidationError;
+import sjs.instagram.domain.exception.LoginIdPasswordInvalidException;
 import sjs.instagram.domain.follow.FollowRepository;
 
 import java.util.ArrayList;
@@ -18,7 +19,7 @@ public class UserValidator {
 
     public void validateExist(Long userId) {
         userRepository.findById(userId).orElseThrow(() ->
-                new IllegalStateException("존재하지 않는 사용자입니다."));
+                new NoUserFoundException("존재하지 않는 사용자입니다."));
     }
 
     public void canViewPost(Long userId, Long targetUserId) {
@@ -41,7 +42,7 @@ public class UserValidator {
         if (!pw.matches("[a-zA-Z0-9?!*]+"))
             errors.add(new ValidationError("password","비밀번호는 영문 소문자,대문자,숫자,?,!,*만 사용 가능합니다."));
         if (!errors.isEmpty())
-            throw new ValidationErrorException(errors);
+            throw new LoginIdPasswordInvalidException(errors);
     }
 
     public void isSameUser(Long userId, Long targetUserId) {

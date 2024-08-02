@@ -9,6 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import sjs.instagram.db.user.UserEntity;
 import sjs.instagram.domain.exception.LoginIdPasswordInvalidException;
+import sjs.instagram.domain.exception.NoUserFoundException;
 import sjs.instagram.domain.exception.ValidationError;
 import sjs.instagram.domain.user.JoinUser;
 import sjs.instagram.domain.user.UserInfo;
@@ -181,7 +182,7 @@ class UserServiceTest {
     void failReadUserInfo() {
         assertThatThrownBy(() ->
                 userService.readUserInfo(1L)).
-                isInstanceOf(IllegalStateException.class).
+                isInstanceOf(NoUserFoundException.class).
                 hasMessage("존재하지 않는 사용자입니다.");
     }
 }
