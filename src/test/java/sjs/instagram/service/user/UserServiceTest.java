@@ -8,15 +8,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import sjs.instagram.db.user.UserEntity;
-import sjs.instagram.domain.ValidationError;
-import sjs.instagram.domain.ValidationErrorException;
+import sjs.instagram.domain.exception.LoginIdPasswordInvalidException;
+import sjs.instagram.domain.exception.ValidationError;
 import sjs.instagram.domain.user.JoinUser;
 import sjs.instagram.domain.user.UserInfo;
 import sjs.instagram.domain.user.UserRepository;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThatList;
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
@@ -58,16 +57,16 @@ class UserServiceTest {
         JoinUser user2 = new JoinUser("id123456789101112131415", "pw1234567");
 
         //when then
-        ValidationErrorException ex1 = Assertions.assertThrows(
-                ValidationErrorException.class,
+        LoginIdPasswordInvalidException ex1 = Assertions.assertThrows(
+                LoginIdPasswordInvalidException.class,
                 () -> userService.joinUser(user1)
         );
         assertThatList(ex1.getErrors()).hasSize(1);
         assertThatList(ex1.getErrors())
                 .containsOnly(new ValidationError("instagramId", "아이디는 6자 이상 15자 이하여야 합니다."));
 
-        ValidationErrorException ex2 = Assertions.assertThrows(
-                ValidationErrorException.class,
+        LoginIdPasswordInvalidException ex2 = Assertions.assertThrows(
+                LoginIdPasswordInvalidException.class,
                 () -> userService.joinUser(user2)
         );
         assertThatList(ex2.getErrors()).hasSize(1);
@@ -82,8 +81,8 @@ class UserServiceTest {
         JoinUser user = new JoinUser("id!@#$%^*", "pw123456");
 
         //when then
-        ValidationErrorException ex = Assertions.assertThrows(
-                ValidationErrorException.class,
+        LoginIdPasswordInvalidException ex = Assertions.assertThrows(
+                LoginIdPasswordInvalidException.class,
                 () -> userService.joinUser(user)
         );
         assertThatList(ex.getErrors()).hasSize(1);
@@ -99,16 +98,16 @@ class UserServiceTest {
         JoinUser user2 = new JoinUser("id123456", "pw123456789101112131415");
 
         //when then
-        ValidationErrorException ex1 = Assertions.assertThrows(
-                ValidationErrorException.class,
+        LoginIdPasswordInvalidException ex1 = Assertions.assertThrows(
+                LoginIdPasswordInvalidException.class,
                 () -> userService.joinUser(user1)
         );
         assertThatList(ex1.getErrors()).hasSize(1);
         assertThatList(ex1.getErrors())
                 .containsOnly(new ValidationError("password", "비밀번호는 6자 이상 15자 이하여야 합니다."));
 
-        ValidationErrorException ex2 = Assertions.assertThrows(
-                ValidationErrorException.class,
+        LoginIdPasswordInvalidException ex2 = Assertions.assertThrows(
+                LoginIdPasswordInvalidException.class,
                 () -> userService.joinUser(user2)
         );
         assertThatList(ex2.getErrors()).hasSize(1);
@@ -123,8 +122,8 @@ class UserServiceTest {
         JoinUser user = new JoinUser("id123456", "pw12@#$%");
 
         //when then
-        ValidationErrorException ex = Assertions.assertThrows(
-                ValidationErrorException.class,
+        LoginIdPasswordInvalidException ex = Assertions.assertThrows(
+                LoginIdPasswordInvalidException.class,
                 () -> userService.joinUser(user)
         );
         assertThatList(ex.getErrors()).hasSize(1);

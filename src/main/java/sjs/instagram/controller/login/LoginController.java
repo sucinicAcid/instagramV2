@@ -7,7 +7,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import sjs.instagram.domain.ValidationErrorException;
+import sjs.instagram.domain.exception.LoginIdPasswordInvalidException;
 import sjs.instagram.service.user.JoinUserRequest;
 import sjs.instagram.service.user.UserService;
 
@@ -44,7 +44,7 @@ public class LoginController {
         try {
             userService.joinUser(joinUserRequest.toJoinUser());
             return "redirect:/loginForm";
-        } catch (ValidationErrorException e) {
+        } catch (LoginIdPasswordInvalidException e) {
             e.getErrors().forEach(err -> {
                 if (err.hasField())
                     bindingResult.rejectValue(err.field(), null, err.message());

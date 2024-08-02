@@ -1,4 +1,4 @@
-package sjs.instagram.domain;
+package sjs.instagram.domain.exception;
 
 
 public record ValidationError(
