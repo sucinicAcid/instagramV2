@@ -12,6 +12,7 @@ import sjs.instagram.db.follow.FollowEntity;
 import sjs.instagram.db.post.PostEntity;
 import sjs.instagram.db.post.PostImageEntity;
 import sjs.instagram.db.user.UserEntity;
+import sjs.instagram.domain.exception.CannotViewPostException;
 import sjs.instagram.domain.exception.NoUserFoundException;
 import sjs.instagram.domain.follow.FollowRepository;
 import sjs.instagram.domain.post.CreatePost;
@@ -423,7 +424,7 @@ class PostServiceTest {
 
         //when then
         assertThatThrownBy(() -> postService.readThumbnailPost(user.getId(), target.getId()))
-                .isInstanceOf(IllegalStateException.class)
+                .isInstanceOf(CannotViewPostException.class)
                 .hasMessage("게시물 접근 권한이 없습니다.");
     }
 }

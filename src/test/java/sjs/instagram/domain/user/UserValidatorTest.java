@@ -8,6 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import sjs.instagram.db.follow.FollowEntity;
 import sjs.instagram.db.user.UserEntity;
+import sjs.instagram.domain.exception.CannotViewPostException;
 import sjs.instagram.domain.exception.LoginIdPasswordInvalidException;
 import sjs.instagram.domain.exception.NoUserFoundException;
 import sjs.instagram.domain.exception.ValidationError;
@@ -82,7 +83,7 @@ class UserValidatorTest {
 
         //when then
         assertThatThrownBy(() -> userValidator.canViewPost(user.getId(), target.getId()))
-                .isInstanceOf(IllegalStateException.class)
+                .isInstanceOf(CannotViewPostException.class)
                 .hasMessage("게시물 접근 권한이 없습니다.");
     }
 

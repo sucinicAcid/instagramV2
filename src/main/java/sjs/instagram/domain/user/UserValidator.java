@@ -3,6 +3,7 @@ package sjs.instagram.domain.user;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import sjs.instagram.db.user.UserEntity;
+import sjs.instagram.domain.exception.CannotViewPostException;
 import sjs.instagram.domain.exception.NoUserFoundException;
 import sjs.instagram.domain.exception.ValidationError;
 import sjs.instagram.domain.exception.LoginIdPasswordInvalidException;
@@ -26,7 +27,7 @@ public class UserValidator {
         UserEntity targetUser = userRepository.findById(targetUserId).get();
         if (targetUser.getPrivacy() == UserEntity.UserAccountPrivacy.PRIVATE)
             if (!followRepository.existsByFromUserIdAndToUserId(userId, targetUserId))
-                throw new IllegalStateException("게시물 접근 권한이 없습니다.");
+                throw new CannotViewPostException("게시물 접근 권한이 없습니다.");
     }
 
     public void validate(JoinUser joinUser) {
