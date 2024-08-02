@@ -50,4 +50,10 @@ public class UserValidator {
         if (userId != targetUserId)
             throw new IllegalStateException("본인 이외의 계정은 탈퇴가 불가능합니다.");
     }
+
+    public void validate(String instagramId) {
+        UserEntity user = userRepository.findByInstagramId(instagramId);
+        if (user == null)
+            throw new NoUserFoundException("존재하지 않는 사용자입니다.");
+    }
 }
