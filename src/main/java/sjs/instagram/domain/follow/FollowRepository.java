@@ -5,4 +5,6 @@ import sjs.instagram.db.follow.FollowEntity;
 
 public interface FollowRepository extends JpaRepository<FollowEntity, Long> {
     boolean existsByFromUserIdAndToUserId(Long fromUserId, Long toUserId);
+    Long countByFromUserId(Long fromUserId);
+    Long countByToUserId(Long toUserId);
 }

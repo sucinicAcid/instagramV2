@@ -29,7 +29,7 @@ public class UserService {
     }
 
     public Long read(String instagramId) {
-        userValidator.validate(instagramId);
+        userValidator.validateExist(instagramId);
         return userReader.readByInstagramId(instagramId);
     }
 }

@@ -11,6 +11,7 @@ import sjs.instagram.db.user.UserEntity;
 import sjs.instagram.domain.exception.LoginIdPasswordInvalidException;
 import sjs.instagram.domain.exception.NoUserFoundException;
 import sjs.instagram.domain.exception.ValidationError;
+import sjs.instagram.domain.follow.FollowRepository;
 import sjs.instagram.domain.user.JoinUser;
 import sjs.instagram.domain.user.UserInfo;
 import sjs.instagram.domain.user.UserRepository;
@@ -27,6 +28,8 @@ class UserServiceTest {
     private UserRepository userRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private FollowRepository followRepository;
 
     @Test
     @DisplayName("회원 가입")
@@ -171,10 +174,15 @@ class UserServiceTest {
         UserInfo info = userService.readUserInfo(user.getId());
 
         //then
+        Long followerCount = followRepository.countByToUserId(user.getId());
+        Long followingCount = followRepository.countByFromUserId(user.getId());
         assertThat(info.instagramId()).isEqualTo(user.getInstagramId());
         assertThat(info.name()).isEqualTo(user.getName());
         assertThat(info.introduction()).isEqualTo(user.getIntroduction());
         assertThat(info.privacy()).isEqualTo(user.getPrivacy());
+        assertThat(info.followerCount()).isEqualTo(followerCount);
+        assertThat(info.followingCount()).isEqualTo(followingCount);
+        assertThat(info.imageStoreFileName()).isEqualTo("defaultUserImage.jpg");
     }
 
     @Test
@@ -182,6 +190,30 @@ class UserServiceTest {
     void failReadUserInfo() {
         assertThatThrownBy(() ->
                 userService.readUserInfo(1L)).
+                isInstanceOf(NoUserFoundException.class).
+                hasMessage("존재하지 않는 사용자입니다.");
+    }
+
+    @Test
+    @DisplayName("인스타그램 아이디로 사용자 조회")
+    void readUserByInstagramId() {
+        //given
+        UserEntity user = new UserEntity("id123456", "pw123456");
+        userRepository.save(user);
+
+        //when
+        Long userId = userService.read("id123456");
+
+        //then
+        UserEntity find = userRepository.findByInstagramId("id123456");
+        assertThat(find.getId()).isEqualTo(userId);
+    }
+
+    @Test
+    @DisplayName("인스타그램 아이디로 사용자 조회 실패: 존재하지 않는 사용자")
+    void failReadUserByInstagramId() {
+        assertThatThrownBy(() ->
+                userService.read("instagramId")).
                 isInstanceOf(NoUserFoundException.class).
                 hasMessage("존재하지 않는 사용자입니다.");
     }

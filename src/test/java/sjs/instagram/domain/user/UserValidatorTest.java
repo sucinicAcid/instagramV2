@@ -234,4 +234,25 @@ class UserValidatorTest {
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessage("본인 이외의 계정은 탈퇴가 불가능합니다.");
     }
+
+    @Test
+    @DisplayName("인스타그램 아이디로 사용자 존재하는지 검증")
+    void validateExistByInstagramId() {
+        //given
+        UserEntity user = new UserEntity("id123456", "pw123456");
+        UserEntity saved = userRepository.save(user);
+
+        //when then
+        assertThatNoException().isThrownBy(() ->
+                userValidator.validateExist("id123456")
+        );
+    }
+
+    @Test
+    @DisplayName("인스타그램 아이디로 사용자 존재하는지 검증 실패")
+    void failValidateExistByInstagramId() {
+        assertThatThrownBy(() -> userValidator.validateExist("id123456"))
+                .isInstanceOf(NoUserFoundException.class)
+                .hasMessage("존재하지 않는 사용자입니다.");
+    }
 }
