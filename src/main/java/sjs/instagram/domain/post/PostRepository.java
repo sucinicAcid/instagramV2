@@ -16,4 +16,6 @@ public interface PostRepository extends JpaRepository<PostEntity, Long> {
             "order by p.createdDate"
     )
     List<ThumbnailPost> findThumbnailPost(@Param("userId") Long userId);
+
+    Long countByUserId(Long userId);
 }

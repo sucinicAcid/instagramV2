@@ -43,4 +43,8 @@ public class PostService {
         userValidator.canViewPost(userId, targetUserId);
         return postReader.readThumbnailPost(targetUserId);
     }
+
+    public Long readCount(Long userId) {
+        return postReader.readCount(userId);
+    }
 }

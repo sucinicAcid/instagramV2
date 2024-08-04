@@ -97,7 +97,7 @@
             <div class="post-3">
                 <div th:each="colNumber, col : ${#numbers.sequence(rowNumber * 3, (rowNumber + 1) * 3 - 1)}" class="post">
                     <th:block th:if="${colNumber &lt; posts.size()}">
-                        <img th:src="|/uploadFile/${posts[colNumber].storeFileName}|" class="post-image">
+                        <img th:src="|/fileStore/${posts[colNumber].storeFileName}|" class="post-image">
                     </th:block>
                 </div>
             </div>

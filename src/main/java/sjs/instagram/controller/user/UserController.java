@@ -38,6 +38,9 @@ public class UserController {
             model.addAttribute("message", e.getMessage());
             return "error";
         } catch (CannotViewPostException e) {
+            Long targetId = e.getPostId();
+            Long postCount = postService.readCount(targetId);
+            model.addAttribute("postCount", postCount);
             return "privateUserInfo";
         }
     }

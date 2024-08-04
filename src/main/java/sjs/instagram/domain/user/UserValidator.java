@@ -27,7 +27,7 @@ public class UserValidator {
         UserEntity targetUser = userRepository.findById(targetUserId).get();
         if (targetUser.getPrivacy() == UserEntity.UserAccountPrivacy.PRIVATE)
             if (!followRepository.existsByFromUserIdAndToUserId(userId, targetUserId))
-                throw new CannotViewPostException("게시물 접근 권한이 없습니다.");
+                throw new CannotViewPostException(targetUserId, "게시물 접근 권한이 없습니다.");
     }
 
     public void validate(JoinUser joinUser) {

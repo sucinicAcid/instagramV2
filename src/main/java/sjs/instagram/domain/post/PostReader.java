@@ -13,4 +13,8 @@ public class PostReader {
     public List<ThumbnailPost> readThumbnailPost(Long userId) {
         return postRepository.findThumbnailPost(userId);
     }
+
+    public Long readCount(Long userId) {
+        return postRepository.countByUserId(userId);
+    }
 }
