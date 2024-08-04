@@ -1,0 +1,206 @@
+body {
+    padding: 0px;
+    margin: 0px;
+}
+
+.bar {
+    position: fixed;
+    box-sizing: border-box;
+    padding-top: 8px;
+    padding-left: 12px;
+    padding-right: 12px;
+    margin: 0px;
+    width: 244px;
+    height: 100vh;
+    border-right: 1px solid rgb(219, 219, 219);
+}
+
+.logo {
+    box-sizing: border-box;
+    height: 73px;
+    width: 100%;
+    padding: 25px 12px 16px 12px;
+    margin-bottom: 19px;
+}
+
+.menu {
+    box-sizing: border-box;
+    padding: 12px;
+    margin: 9px 0px;
+    display: flex;
+}
+
+.menu-icon {
+    box-sizing: border-box;
+    width: 24px;
+    height: 24px;
+}
+
+.bar-profile-box {
+    border-radius: 70%;
+    overflow: hidden;
+}
+
+.bar-profile-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.menu-name {
+    box-sizing: border-box;
+    height: 24px;
+    padding-left: 16px;
+}
+
+.main {
+    padding: 30px 20px 0px 20px;
+    margin: 0px 22px 0px 266px;
+    width: 935px;
+}
+
+.profile {
+    margin-bottom: 44px;
+    display: flex;
+}
+
+.profile-image-section {
+    margin-right: 30px;
+    width: 292px;
+    height: 203px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.box {
+    width: 150px;
+    height: 150px;
+    border-radius: 70%;
+    overflow: hidden;
+}
+
+.profile-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.id-section {
+    width: 614px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+}
+
+.profile-text-section {
+    display: flex;
+    flex-direction: column;
+    /*justify-content: center;*/
+}
+
+.font-size-25px {
+    font-size: 25px;
+}
+
+.follow-button-box {
+    margin-left: 28px;
+}
+
+.edit-button {
+    border: none;
+    border-radius: 8px;
+    padding: 7px 16px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.profile-blank {
+    margin-bottom: 20px;
+}
+
+.numbers {
+    margin: 0 0 20px;
+    display: flex;
+    padding: 0;
+}
+
+.number {
+    margin-left: 0;
+    margin-right: 40px;
+    list-style-type: none;
+}
+
+.fw-600 {
+    font-weight: 600;
+}
+
+.name {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.introduction {
+    font-size: 14px;
+}
+
+.who-follow {
+    margin-top: 14px;
+    font-size: 12px;
+}
+
+.who-follow-id {
+    font-weight: 600;
+    font-size: 12px;
+}
+
+.blank {
+    width: 935px;
+    height: 52px;
+    border-top: 1px solid rgb(219, 219, 219);
+}
+
+.private-account-container {
+    text-align: center;
+    background-color: #fff;
+    padding: 20px;
+    border: 1px solid #dbdbdb;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.follow-button {
+    background-color: #0095f6;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.follow-button:hover {
+    background-color: #007bb5;
+}
+
+.follow-button:hover {
+    background-color: #007bb5;
+}
+
+.private-account-header h2 {
+    font-size: 24px;
+    margin: 10px 0;
+    color: #262626;
+}
+
+.private-account-header p {
+    font-size: 16px;
+    color: #8e8e8e;
+    margin-bottom: 20px;
+}
+
+.private-account-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
