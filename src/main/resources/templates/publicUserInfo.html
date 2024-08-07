@@ -80,7 +80,7 @@
             </div>
             <div class="profile-blank"></div>
             <ul class="numbers">
-                <li class="number">게시물 <span class="fw-600" th:text="${#lists.size(posts)}">게시물 수</span></li>
+                <li class="number">게시물 <span class="fw-600" th:text="${#lists.size(thumbnails)}">게시물 수</span></li>
                 <li class="number">팔로워 <span class="fw-600" th:text="${userInfo.followerCount}">팔로우 수</span></li>
                 <li class="number">팔로우 <span class="fw-600" th:text="${userInfo.followingCount}">팔로잉 수</span></li>
             </ul>
@@ -93,16 +93,107 @@
     <div class="blank"></div>
 
     <div class="posts">
-        <div th:each="rowNumber, row : ${#numbers.sequence(0, posts.size / 3)}">
+        <div th:each="rowNumber, row : ${#numbers.sequence(0, thumbnails.size / 3)}">
             <div class="post-3">
                 <div th:each="colNumber, col : ${#numbers.sequence(rowNumber * 3, (rowNumber + 1) * 3 - 1)}" class="post">
-                    <th:block th:if="${colNumber &lt; posts.size()}">
-                        <img th:src="|/fileStore/${posts[colNumber].storeFileName}|" class="post-image">
+                    <th:block th:if="${colNumber &lt; thumbnails.size()}">
+                        <img th:src="|/fileStore/${thumbnails[colNumber].storeFileName}|" class="post-image"
+                             th:onclick="|openModal(${thumbnails[colNumber].postId})|">
                     </th:block>
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- 모달 -->
+    <div id="post-modal" style="display:none;">
+        <div id="modal-content">
+            <div id="modal-postImages"></div>
+            <div id="modal-texts">
+                <div class="modal-title">
+                    <h1>1POST TITLE POST TITLEPOST TITLEPOST TITLEPOST TITLEPOST TITLEPOST TITLE</h1>
+                </div>
+                <div id="modal-comments" class="modal-comments">
+                <!-- 댓글 추가 -->
+                </div>
+                <div class="modal-input-area">
+                    <div>좋아요 버튼</div>
+                    <div id="likes"></div><!-- 좋아요 개수-->
+                    <div class="input-container">
+                        <input type="text" id="comment-textarea" placeholder="Add a comment..."></input>
+                        <button type="button" id="comment-button">게시</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <span id="close-modal" onclick="closeModal()">×</span>
+    </div>
+    <script>
+        function openModal(postId) {
+            fetch(`/posts/${postId}`)
+                .then(response => response.json())
+                .then(data => {
+                    // 모달에 게시물 정보 표시
+                    //document.getElementById('modal-title').textContent = data.title;
+                    //document.getElementById('modal-userImage').src = '/fileStore/' + data.userImage;
+                    //document.getElementById('modal-content-text').textContent = data.content;
+                    //document.getElementById('modal-likes').textContent = `Likes: ${data.likes}`;
+
+                    // 게시물 이미지 처리
+                    const postImagesContainer = document.getElementById('modal-postImages');
+                    postImagesContainer.innerHTML = ''; // 기존 이미지 제거
+                    data.postImages.forEach(image => {
+                        const imgElement = document.createElement('img');
+                        imgElement.src = '/fileStore/' + image;
+                        postImagesContainer.appendChild(imgElement);
+                    });
+
+                    const likesContainer = document.getElementById('likes');
+                    const strongElement = document.createElement('strong');
+                    strongElement.textContent = `좋아요 ${data.likes}개`
+                    strongElement.classList.add('likes');
+                    likesContainer.appendChild(strongElement);
+
+                    // 댓글 처리
+                    const commentsContainer = document.getElementById('modal-comments');
+                    commentsContainer.innerHTML = ''; // 기존 댓글 제거
+                    data.comments.forEach(comment => {
+                        // 댓글 요소 생성
+                        const commentElement = document.createElement('div');
+                        commentElement.classList.add('modal-comment');
+
+                        // 프로필 이미지 생성
+                        const profileImg = document.createElement('img');
+                        profileImg.src = '/fileStore/' + comment.userImage; // 프로필 이미지 URL
+                        profileImg.classList.add('comment-profile-img');
+
+                        // 사용자 이름과 댓글 내용
+                        const commentText = document.createElement('p');
+                        commentText.innerHTML = `<strong>${comment.instagramId}</strong>${comment.content}`;
+                        commentText.classList.add('comment');
+
+                        // 요소들 결합
+                        commentElement.appendChild(profileImg);
+                        commentElement.appendChild(commentText);
+
+                        // 댓글 요소를 댓글 컨테이너에 추가
+                        commentsContainer.appendChild(commentElement);
+                    });
+
+                    // 모달 표시
+                    document.getElementById('post-modal').style.display = 'flex';
+                    document.body.style.overflow = 'hidden';
+                })
+                .catch(error => {
+                    console.error('Error fetching post details:', error);
+                });
+        }
+
+        function closeModal() {
+            document.getElementById('post-modal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+    </script>
 </div>
 </body>
 </html>

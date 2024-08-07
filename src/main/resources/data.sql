@@ -1,11 +1,11 @@
+-- 사용자 추가
 insert into USERS values (1, '123123', 'Me에요', 'Me', '$2a$12$Uez3/vVjQzVSzODkmg8J/etJPQRT0FNjZ3ERliIiGGTS2U7ocoIwW', 'defaultUserImage.jpg', 'defaultUserImage.jpg', 'PUBLIC', 'USER');
 insert into USERS values (2, '234234', 'PUBLIC and following', 'David', '$2a$12$tGfgKunIOtw7Dce4RR.Wv.TLlpiYR98E3uZatHobJZN1K3wUGpMjG', 'defaultUserImage.jpg', 'defaultUserImage.jpg', 'PUBLIC', 'USER');
 insert into USERS values (3, '345345', 'PUBLIC and not following', 'Shelly', '$2a$12$oHURERFe9lXN6f8/xO1ipOzB.0sst7/utLQy1iCb1z0bqU89bkL4e', 'defaultUserImage.jpg', 'defaultUserImage.jpg', 'PUBLIC', 'USER');
 insert into USERS values (4, '456456', 'PRIVATE and following', 'Andrew', '$2a$12$8Rqh7s1sFK3AATnxBZWkMu4CxRdX9fXf.6KmwV8euwgdwfAjieUsy', 'defaultUserImage.jpg', 'defaultUserImage.jpg', 'PRIVATE', 'USER');
 insert into USERS values (5, '567567', 'PRIVATE and not following', 'Amanda', '$2a$12$w/aO86Bc84ZzcUSTSawG0OxPQBFetl/w30qkMbi/sLLMLPzS81pny', 'defaultUserImage.jpg', 'defaultUserImage.jpg', 'PRIVATE', 'USER');
 
-
-
+-- 팔로우 추가
 insert into FOLLOWS values (1, 1, 2);
 insert into FOLLOWS values (2, 2, 1);
 insert into FOLLOWS values (3, 1, 4);
@@ -13,8 +13,7 @@ insert into FOLLOWS values (4, 4, 1);
 insert into FOLLOWS values (5, 2, 4);
 insert into FOLLOWS values (6, 4, 2);
 
-
-
+-- 게시물 추가
 insert into POSTS values ('2024-08-04 00:00:00.0', '2024-08-04 00:00:00.0', 1, 1, '제목1', '내용1');
 insert into POSTS values ('2024-08-04 00:00:00.0', '2024-08-04 00:00:00.0', 2, 1, '제목2', '내용2');
 insert into POSTS values ('2024-08-04 00:00:00.0', '2024-08-04 00:00:00.0', 3, 1, '제목3', '내용3');
@@ -45,8 +44,7 @@ insert into POSTS values ('2024-08-04 00:00:00.0', '2024-08-04 00:00:00.0', 23, 
 insert into POSTS values ('2024-08-04 00:00:00.0', '2024-08-04 00:00:00.0', 24, 5, '제목4', '내용4');
 insert into POSTS values ('2024-08-04 00:00:00.0', '2024-08-04 00:00:00.0', 25, 5, '제목5', '내용5');
 
-
-
+-- 게시물 사진 추가
 insert into POST_IMAGES values ('2024-08-04 00:00:00.0', 1, '2024-08-04 00:00:00.0', 1, '4e1674b2-ef99-41de-839f-9783431acdf9.jpg', 'cat1.jpg');
 insert into POST_IMAGES values ('2024-08-04 00:00:00.0', 2, '2024-08-04 00:00:00.0', 2, 'd4522098-dea9-4222-9790-c81aae2bdc51.jpg', 'cat2.jpg');
 insert into POST_IMAGES values ('2024-08-04 00:00:00.0', 3, '2024-08-04 00:00:00.0', 3, 'e4599a58-3d6c-45e5-843c-58df4f6baece.jpg', 'cat3.jpg');
@@ -76,3 +74,15 @@ insert into POST_IMAGES values ('2024-08-04 00:00:00.0', 22, '2024-08-04 00:00:0
 insert into POST_IMAGES values ('2024-08-04 00:00:00.0', 23, '2024-08-04 00:00:00.0', 23, '2006447e-d4e5-4a0a-9d5b-0b1ba218d419.jpg', 'cat3.jpg');
 insert into POST_IMAGES values ('2024-08-04 00:00:00.0', 24, '2024-08-04 00:00:00.0', 24, 'a1766c9a-c5e6-498c-9e3d-964b1a1ee1be.jpg', 'cat4.jpg');
 insert into POST_IMAGES values ('2024-08-04 00:00:00.0', 25, '2024-08-04 00:00:00.0', 25, '75f7bb8d-462a-4ff6-bf63-69adc68b9cc4.jpg', 'cat5.jpg');
+
+-- 댓글 추가
+insert into COMMENTS values (1, 1, 1, '안녕하세요 댓글1입니다');
+insert into COMMENTS values (2, 1, 1, '안녕하세요 댓글2입니다');
+insert into COMMENTS values (3, 1, 2, '안녕하세요 댓글3입니다');
+insert into COMMENTS values (4, 1, 2, '안녕하세요 댓글4입니다');
+insert into COMMENTS values (5, 1, 3, '안녕하세요 댓글5입니다');
+insert into COMMENTS values (6, 1, 3, '안녕하세요 댓글6입니다');
+insert into COMMENTS values (7, 1, 4, '안녕하세요 댓글7입니다');
+insert into COMMENTS values (8, 1, 4, '안녕하세요 댓글8입니다');
+insert into COMMENTS values (9, 1, 5, '안녕하세요 댓글9입니다');
+insert into COMMENTS values (10, 1, 5, '안녕하세요 댓글10입니다');
