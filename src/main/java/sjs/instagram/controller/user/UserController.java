@@ -31,8 +31,8 @@ public class UserController {
             Long targetId = userService.read(instagramId);
             UserInfo userInfo = userService.readUserInfo(targetId);
             model.addAttribute("userInfo", userInfo);
-            List<ThumbnailPost> posts = postService.readThumbnailPost(userId, targetId);
-            model.addAttribute("posts", posts);
+            List<ThumbnailPost> thumbnails = postService.readThumbnailPost(userId, targetId);
+            model.addAttribute("thumbnails", thumbnails);
             return "publicUserInfo";
         } catch (NoUserFoundException e) {
             model.addAttribute("message", e.getMessage());

@@ -63,13 +63,13 @@ class UserControllerTest {
         UserEntity target = createUser("id654321", "pw654321");
 
         UserInfo userInfo = userService.readUserInfo(target.getId());
-        List<ThumbnailPost> posts = postService.readThumbnailPost(loginUserDetails.getUser().id(), target.getId());
+        List<ThumbnailPost> thumbnails = postService.readThumbnailPost(loginUserDetails.getUser().id(), target.getId());
 
         //when then
         mockMvc.perform(get("/users/id654321")
                         .with(SecurityMockMvcRequestPostProcessors.user(loginUserDetails)))
                 .andExpect(model().attribute("userInfo", userInfo))
-                .andExpect(model().attribute("posts", posts))
+                .andExpect(model().attribute("thumbnails", thumbnails))
                 .andExpect(status().isOk())
                 .andExpect(view().name("publicUserInfo"));
     }

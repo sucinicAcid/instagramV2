@@ -45,6 +45,12 @@ public class PostService {
     }
 
     public Long readCount(Long userId) {
+        userValidator.validateExist(userId);
         return postReader.readCount(userId);
+    }
+
+    public PostDetails readPostDetails(Long postId) {
+        postValidator.validateExist(postId);
+        return postReader.readPostDetails(postId);
     }
 }

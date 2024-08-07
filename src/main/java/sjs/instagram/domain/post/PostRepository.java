@@ -18,4 +18,20 @@ public interface PostRepository extends JpaRepository<PostEntity, Long> {
     List<ThumbnailPost> findThumbnailPost(@Param("userId") Long userId);
 
     Long countByUserId(Long userId);
+
+    @Query("""
+        SELECT new sjs.instagram.domain.post.PostDetails(
+            (SELECT u.name FROM UserEntity u WHERE u.id = p.userId),
+            (SELECT u.image.storeFileName FROM UserEntity u WHERE u.id = p.userId),
+            p.title,
+            p.content, 
+            (SELECT COUNT(pl) FROM PostLikeEntity pl WHERE pl.postId = p.id)
+        )
+        FROM PostEntity p
+        WHERE p.id = :postId
+    """)
+    PostDetails findPostDetails(@Param("postId") Long postId);
+
+    @Query("SELECT pi.image.storeFileName FROM PostEntity p JOIN p.images pi ON p.id = :postId")
+    List<String> findStoreFileName(@Param("postId") Long postId);
 }
